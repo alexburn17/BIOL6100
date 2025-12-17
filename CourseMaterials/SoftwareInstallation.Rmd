@@ -1,10 +1,10 @@
 ---
 title: "Software Installation"
 author: "Biology 6100 - Computational Biology"
-date: "Spring 2025"
+date: "Spring 2026"
 output:
   prettydoc::html_pretty:
-    theme: hpstr
+    theme: architect
     highlight: github
 ---
 Here are the software packages you need to load onto your computer for this course. These programs work on Mac or Windows computers. They are free, safe, and do not take up much disk space. If you already have some of these programs installed, please check to make sure you are using the latest versions.
@@ -16,20 +16,6 @@ Go to each software page and follow the instructions for downloading the install
 Installing new software can sometimes be tricky. If you run into any issues please contact me or George, and we should be able to help you out.
 
 
-## Detailed Installation Instructions
-
-Lauren Ash (the original TA for Computational Biology) has graciously provided a much more detailed set of instructions for installing the software that you will need. If you are having any troubles, consult this page
-
-[Lauren's Installation Instructions](Installation_Instructions.html)
-
-## Typora
-
-Typora is a slick little markdown editor that compiles to `.pdf` and `.html`. It is great for learning the markdown language and using for all sorts of basic daily writing activities. 
-
-https://typora.io/
-
-> 2022 Update. It appears that Typora is now charging a fee of $15 for the latest version. This is a one-time fee (not a subscription) with a license for 3 devices. This is an excellent piece of software that I use every day; it is well worth this modest fee.
-
 ## Github
 
 GitHub is a free web-based repository for storing and updating your computer code, collaborating with others on documents and coding, and hosting your webpages. We will use GitHub extensively in this course. During the first week of class, you will start by building your own GitHub repository and website, and you will post all of your homeworks and exercises to this website during the semester. It will be an on-line "portfolio" of your work. Register for free GitHub account below, and be sure to record your user name and password for future use.
@@ -37,31 +23,27 @@ GitHub is a free web-based repository for storing and updating your computer cod
 [register For GitHub](https://github.com/)
 
 ## R
-R is the basic computational language we will use in this class. We will use R not only for coding, but also for taking notes, displaying code, and creating slides and graphs. The latest version of R (6 January 2024) is 4.3.2 ("Eye Holes").   
+R is the basic computational language we will use in this class. We will use R not only for coding, but also for taking notes, displaying code, and creating slides and graphs. The latest version of R (12 December 2025) is 4.5.2.   
 
-[download R](http://lib.stat.cmu.edu/R/CRAN/ )
-
-## RStudio
-RStudio is an IDE (Integrated Development Environment), which is a special editor that makes it much easier to use R and adds a number of useful features. **Make sure you have installed/updated R first before you install/update RStudio**. Choose either the Windows or Mac OS installer. The latest version of RStudio (6 January 2024) is RStudio 2023.12.0
+[download R](http://lib.stat.cmu.edu/R/CRAN/)
 
 
+## Python 3 (Miniconda)
+Miniconda is a tool that helps install and organize Python and the software packages it uses. We will use Miniconda in this class to make sure everyone is working with the same setup, which reduces technical problems and makes it easier to follow along with examples and assignments.The Miniconda installer we will use is the latest version available at the start of the semester, which is the 12-2025 build.
+  
+[download Miniconda](https://repo.anaconda.com/miniconda/)
 
-[download R Studio](https://www.rstudio.com/products/rstudio/download/)
-
-If you already have R and RStudio installed, you will definitely need to update them so that everything will work properly. Although it is relatively easy to update R, one minor headache is that it does not update all of your packages and libraries, which then have to be reloaded each time you initially use them. Here is an older post post that shows you how to update R and reload all of your previous packages automatically:
-
-https://www.r-bloggers.com/updating-r/
-
-If you have some experience with R already, you may want to try this, although it did not work for me the last time I tried it (04 January 2020). Since then, I have decided it is simpler to just reload the packages I need after a fresh installation. In some cases older packages were defunct, have been upgraded and migrated to CRAN (the official repository for packages), or I am just not using them anymore. So I treat the upgrade of R as a sprimg cleaning, and then just re-install packages as I need them. Please check with me or George if you are having trouble.
+## Positron
+Positron is an IDE (Integrated Development Environment), which is a special editor that makes it much easier to use R and Python and adds a number of useful features. **Make sure you have installed/updated R first before you install/update RStudio**. Choose either the Windows or Mac OS installer.
 
 
-Also, you can run into minor snags (especially with `ggplot2`) if your packages have not been updated in a long time. From the console, enter this:
 
-```{r, eval=FALSE}
-update.packages(checkBuilt=TRUE, ask=FALSE)
-```
+[download Positron](https://positron.posit.co/download.html)
+
 
 ## Installing LaTeX and other useful packages
+If you already have R and Positron installed, you may want to try to add a few packages that we will be using.
+
 LaTeX (pronounced "la-tech") is a typesetting language that renders plain text to a pdf, and is used by RStudio (and other programs). In the past, getting LaTeX installed properly was a major hair-pulling exercise during the first week of class, particularly for older Windows machines.
 
 Fortunately, life got a lot easier a few years ago with the release of the `tinytex` R package by Yihui Xi. We only need to use this package once to install LaTeX. Two other R packages that we will use frequently are `tidyverse` and `patchwork`. All three packages are now available on CRAN.
