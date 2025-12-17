@@ -1,20 +1,18 @@
 ---
 title: "Biology 6100 - Computational Biology"
-author: "Nicholas J. Gotelli"
-date: "Spring 2025"
+author: "P. Alexander Burnham"
+date: "Spring 2026"
 output:
   prettydoc::html_pretty:
-    theme: hpstr
+    theme: architect
     highlight: github
 ---
 Click here for [COMPLETE SET OF SPRING 2020 PANDEMIC-YEAR COURSE VIDEOS](https://ngotelli.github.io/Bio381Vids/) 
 
 
-This site contains course materials, scripts, homeworks, and resources for Computational Biology, Spring 2025.
+This site contains course materials, scripts, homeworks, and resources for Computational Biology, Spring 2026.
 
 ## Course Materials
-
-[Goiania Workshop Script 3 June 2025](CourseMaterials/StrategicCodingWorkshopScript.R)
 
 [Software Installation](CourseMaterials/SoftwareInstallation.html)
 
