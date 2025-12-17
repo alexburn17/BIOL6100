@@ -6,8 +6,6 @@ output:
   html_document: 
     highlight: tango
     theme: united
-    keep_md: yes
-  pdf_document: default
 ---
 
 ___

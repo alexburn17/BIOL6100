@@ -6,6 +6,13 @@ output:
   prettydoc::html_pretty:
     theme: architect
     highlight: github
+exclude:
+  - "*.Rmd"
+  - "**/*.Rmd"
+  - Scripts/
+  - Lectures/
+  - CheatSheets/
+  - CourseMaterials/
 ---
 
 
