@@ -76,7 +76,7 @@ April 22  | - | Catch-up Day
 April 23  | [File Batch Processing III](Lectures/FileBatchProcessing.html) | -
 April 28  | Lecture Spillover Day | -
 April 29  | Lecture Spillover Day | -
-April 30 | Lecture Spillover Day | - 
+April 30  | Lecture Spillover Day | - 
 
 ___
 
