@@ -63,7 +63,7 @@ George will begin each class with a brief lecture presentation and demonstration
 * Attend nearly all of the lectures and lab meetings
 * Do the coding exercises in class when they are assigned
 * Regularly update your course webpage with completed and partially completed assignments
-* **Complete the assignments in time for the Portfolio Checks (8 February, 8 March, and 12 April), so that your final course grade will not be lowered!**
+* **Complete the assignments in time for the Portfolio Checks (7 February, 7 March, and 11 April), so that your final course grade will not be lowered!**
 * Study the code of your classmates on their webpages to see how they have solved the same problems you are working on
 * Annotate your code so it is useful to you and others
 * Surf the internet to find solutions to programming problems
