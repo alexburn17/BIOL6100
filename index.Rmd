@@ -1,0 +1,129 @@
+---
+title: "Biology 6100 - Computational Biology"
+author: "Nicholas J. Gotelli"
+date: "Spring 2025"
+output:
+  prettydoc::html_pretty:
+    theme: hpstr
+    highlight: github
+---
+Click here for [COMPLETE SET OF SPRING 2020 PANDEMIC-YEAR COURSE VIDEOS](https://ngotelli.github.io/Bio381Vids/) 
+
+
+This site contains course materials, scripts, homeworks, and resources for Computational Biology, Spring 2025.
+
+## Course Materials
+
+[Goiania Workshop Script 3 June 2025](CourseMaterials/StrategicCodingWorkshopScript.R)
+
+[Software Installation](CourseMaterials/SoftwareInstallation.html)
+
+[Course Syllabus](CourseMaterials/CourseSyllabus.html)   
+
+[R Scripts](Scripts/RScripts.html)
+
+[Example Datasets](Datasets/Example_Datasets.html)
+
+[Cheat Sheets & Programming Resources](CheatSheets/CheatSheets.html)
+
+___
+
+## Lecture Outlines & Homework Assignments
+
+Date  | Lecture | Homework
+------------- |----------- | -------------
+January 14  | [Introduction](Lectures/Introduction.html) | -  
+January 15  | - | [Homework #1](Homeworks/Homework_01.html)             
+January 16  | [GitHub](Lectures/GitHub.html) | -  
+January 21  | [Markdown](Lectures/Markdown.html) | -
+January 22 | - |  [Homework #2](Homeworks/Homework_02.html)
+January 23  | [Regular Expressions](Lectures/RegularExpressions.html) | -
+January 28  | [Atomic Vectors I](Lectures/AtomicVectors_I.html) | - 
+January 29  |  -  | [Homework #3](Homeworks/Homework_03.html)
+January 30  | [Atomic Vectors II](Lectures/AtomicVectors_II.html) | - 
+February 4  | [Matrices, Lists, Data Frames](Lectures/MatricesListsDataFrames.html) | - 
+February 5  | **Portfolio Check #1**  | [Homework #4](Homeworks/Homework_04.html)
+February 6  | [Matrices, Lists, Data Frames II](Lectures/MatricesListsDataFrames.html)| - 
+February 11  | [Functions I](Lectures/Functions.html) | -
+February 12  | -  | [Homework #5](Homeworks/Homework_05.html)
+February 13   | [Functions II](Lectures/Functions.html) | -
+February 18 | [Control Structures](Lectures/ControlStructures_I.html)| -
+February 19  | -  | [Homework # 6](Homeworks/Homework_08.html)
+February 20 | [For Loops I](Lectures/ForLoops_I.html)| -
+February 25  |[For Loops II](Lectures/ForLoops_II.html) | [(Probability Distributions)](Lectures/ProbabilityDistributions.html)
+February 26  |  | [dplyr/SQL](Lectures/dplyr_Lecture1.html) 
+February 27  | [dplyr+SQL lecture notes](Lectures/dplyr_SQL_Lecture.html) | [Homework #7](Homeworks/Homework_06a.html)  | |
+March 4  | Town Meeting Day Recess | -
+March 5  | **Portfolio Check #2** | [Catch-Up Day](Homeworks/???)
+March 6  | [Probability Distributions I](Lectures/ProbabilityDistributions.html)| -
+March 11 | Spring Recess | -
+March 12 | Spring Recess | -
+March 13 | Spring Recess | -
+March 18  | [Probability Distributions II](Lectures/ProbabilityDistributions.html)| -
+March 19  |  |[Homework #8](Homeworks/Homework_06.html)
+March 20  | [Strategic Coding Practices](Lectures/StrategicCodingPractices.html) | -
+March 25 | [Strategic Coding Practices II](Lectures/StrategicCodingPractices.html) | -
+March 26  | - | [Homework #9](Homeworks/Homework_11.html)
+March 27  | [ggplot I](Lectures/ggplot_I.html) | -
+April 1  | [ggplot II](Lectures/ggplot_II.html)  | -
+April 2  | - | [Catch-up Day]()
+April 3  | [ggplot III](Lectures/ggplot_III.html) | -
+April 8  | [ggplot III](Lectures/ggplot_III.html)  | -
+April 9  | **Portfolio Check #3** | [Homework #10](Homeworks/Homework_12.html)
+April 10  | [ggplot IV](Lectures/ggplot_IV.html) | -
+April 15 | [Functional Programming](Lectures/Functional_Programming.html) | -
+April 16  | - |
+April 17 | [File Batch Processing I](Lectures/FileBatchProcessing.html) | -
+April 22  | [File Batch Processing II](Lectures/FileBatchProcessing.html) | -
+April 23  | - | Catch-up Day
+April 24  | [File Batch Processing III](Lectures/FileBatchProcessing.html) | -
+April 29  | Lecture Spillover Day | -
+April 30  | Lecture Spillover Day | -
+May 1 | Lecture Spillover Day | - 
+
+___
+
+### Important Dates
+- 17 January: Last day to add classes without instructor permission
+- 27 January: Add/Drop, Pass/No Pass, Audit Deadline
+- 28 March: Last day to withdraw
+- 18 April: Honors Day
+- 2 May: Last day of classes
+- 3,3,7 May: Reading days
+- 5,6,8,9 May: Final exam days
+
+___
+
+### Meet The Class of 2025
+
+Student  | GitHub and Portfolio Links | Fun Fact
+------------- | -------------- | ------------- 
+Juliana Barbosa Torreao Dau |[GitHub](https://julianadau.github.io/Assignments/) | I love to paint using watercolor.
+Taylor Bean| [GitHub](https://tebean.github.io/BeanBio6100/index.html)  |  I have 2 axolotls named Neil and Oscar
+Claire Benning | [GitHub](https://clbenning.github.io/BenningBio6100/) | My max speed alpine skiing is 52 mph
+Isaac Buabeng |[GitHub](https://ikb001.github.io/BuabengBIO381/)  |I speak four languages (three fluently, the other so so!) and enjoy trying different types of food! 
+Audrey Commerford |[GitHub](https://accommerford.github.io/CommerfordBIOL6100/)  |I have dyed my hair every color of the rainbow. 
+Lauren Connolly| [GitHub](https://laurenconnolly.github.io/PracticeRepo/index.html) |  I live in Vermont and I have never been skiing
+Laura Costello|[GitHub](https://quietlymagical.github.io/LauraWebsite/)| I’ve seen 29 wild orchid species in New England, and my goal is to see them all
+Silas Decker  | [GitHub](https://silasdecker.github.io/test_2025/) |I love soil, specifically microbes within  
+Nick Gotelli | [GitHub](https://xgithub.com/GotelliLab)  [Portfolio](http://www.uvm.edu/~ngotelli/homepage.html) | For the past 40 years, I have owned and raised pure-bred, show-quality chow chows.
+Rei Jia | [GitHub](https://g-reijia.github.io/JiaBio6100/) |My parents were in a National Geographic documentary 
+Robert Jones | [GitHub](https://frankosecundo.github.io/YAR/) | I was briefly the Northern most human in the state of Alaska
+Noah Mattheis| [GitHub](https://noahmattheis.github.io/MattheisBIOL6100/)|
+Nick Maurizi | [GitHub](https://nicholas-maurizi.github.io/mywebsite/) | I love mountain biking
+Sydney Miller |[GitHub](https://sydmil.github.io/Test-2025/)  | I weave textiles!
+Graham Montague | [GitHub](https://graham-montague.github.io/MontagueCompBio/)  | I night snorkeled with American Eels last summer in Lake Champlain!
+George Ni | [GitHub](https://xgithub.com/georgeni2442) [Portfolio](https://xgeorgeni2442.github.io/TestRepo) | I used to train birds for falconry and science shows.
+Leslie Paredes Torres| [GitHub](https://leslieparedes.github.io/Test_2025/) | I used to be a dolphin trainer 
+Emma Privett |[GitHub](https://emmaprivett.github.io/PrivettBiol6100/) |  I have an among us tattoo!
+Kristof Rohaly-Medved|[GitHub](https://github.com/kristofrm/Rohaly-MedvedBio381)| 
+Lamija Semic |[GitHub](https://lamijasemic.github.io/SemicBio6100/) | I study the Colorado potato beetle!
+Isabelle Smith |[GitHub](https://isabelle-smith.github.io/SmithBio6100/) | I have never broken a bone
+Sarah Stover |[GitHub](https://sstover40.github.io/Compbio25/)| My mom is a twin and so am I 
+Sage Sularz |[GitHub](https://sagesularz.github.io/Biol1600_Sularz/) | I love to travel and have visited 6/7 continents (so far!)
+Jay Sullivan| [GitHub](https://jay-sullivan.github.io/OfficeHours/index.html) | I have been sailing for a little more than a decade.
+Vincent Tamakloe | [GitHub](https://vince-tkloe.github.io/CompBioWebsite/) |I love soccer, and I am pretty good at it 
+Sam Troast | [GitHub](https://stroast.github.io/Lab_2_ComBio/) |I'm an identical twin
+Maggie Trout | [GitHub](https://annellatr.github.io/TroutBio6100/) |I went to an arts school for middle and high school 
+Maddie Winer | [GitHub](https://02maddie.github.io/test2025/) | I have been vegan for the past 3 years.
+Nicolas Zapata |[GitHub](https://jnicozb.github.io/ZapataBio6100/)| I really like statistics but it takes me a long time to process the data (in my head).

@@ -1,0 +1,318 @@
+---
+title: 'Lecture #14: Structured Programming'
+author: "Nicholas J. Gotelli"
+date: "23 March 2021"
+output:
+  html_document: 
+    highlight: tango
+    theme: united
+    keep_md: yes
+  pdf_document: default
+---
+### Using snippets
+```
+snippet mbar
+################
+
+snippet mlab
+# ${1:label} ------------------------
+```
+
+
+
+### Building a Function Template
+```
+snippet mfun
+##############################
+# FUNCTION: ${1:funname}
+# purpose: 
+# input: 
+# output:  
+#-------------------- 
+${1:funname} <- function() {
+
+
+ message("testing...${1:funname}")
+}
+
+```
+
+### Pseudocode 
+
+*pseudocode* is a simple list of instructions that gives the overall flow of the program without (yet) specifying the exact language and functions. At the most basic, it is just a list of what a program will do. Here, for example is generic pseudocode that describes about 95% of the programming chores we face:
+
+```
+Get data
+Calculate stuff
+Summarize output
+Graph results
+```
+### Structured Programming With PseudoCode And Functions
+
+Let's use the pseudocode to build a program. 
+
+```
+get_data()
+calculate_stuff()
+summarize_output()
+graph_results()
+
+```
+
+Now we use our template to build 4 functions and then run them
+
+```{r, eval=FALSE}
+# Sample program to illustrate structured programming with functions
+# 9 March 2017
+# NJG
+
+# All functions must be declared at the top before they are used
+##################################################
+# FUNCTION: get_data
+# purpose:
+# input:
+# output: 
+#------------------------------------------------- 
+get_data <- function() {
+
+
+ message("testing...get_data")
+}
+##################################################
+# FUNCTION: calculate_stuff
+# purpose:
+# input:
+# output: 
+#------------------------------------------------- 
+calculate_stuff <- function() {
+
+
+ message("testing...calculate_stuff")
+}
+##################################################
+# FUNCTION: summarize_output
+# purpose:
+# input:
+# output: 
+#------------------------------------------------- 
+summarize_output <- function() {
+
+
+ message("testing...summarize_output")
+}
+##################################################
+# FUNCTION: graph_results
+# purpose:
+# input:
+# output: 
+#------------------------------------------------- 
+graph_results <- function() {
+
+
+ message("testing...graph_results")
+}
+##################################################
+library(ggplot2)
+get_data()
+calculate_stuff()
+summarize_output()
+graph_results()
+
+```
+### Sourcing Functions In A Separate Script File
+1. Cut and copy all functions to new Rscript `MyFunctions.R`
+2. Create new file called `MyShortProgram.R`
+3. Add following code to the new program:
+
+```
+source("MyFunctions.R")
+get_data()
+calculate_stuff()
+summarize_output()
+graph_results()
+
+```
+the `source` function runs a specified R script file automatically. It is equivalent to running `<Control><Shift><Enter>` from within a script file.
+
+#### Advantages of Sourcing
+
+1. Let's you build a library of reusable functions
+2. Corrections can be made once and then applied to all programs that use them
+
+#### Disadvantages of Sourcing
+
+1. Breaks code into two separate files, both of which must be present.
+2. Discourages minor tweaks to functions because they will affect other programs.
+
+#### Compromise solution
+
+1. Maintain a single R script that contains the functions you have built.
+2. Cut and paste functions that you want from your function file to your script file.
+3. When you create new functions that are useful, append a copy to your function file.
+4. A new idea: try creating a separate little R script for each function and then source those with single lines of code! (adapted from R scripts of Giovanni Strona)
+
+#### Building the `CalculateStuff()` Function
+```{r, eval=FALSE}
+
+##################################################
+# FUNCTION: calculate_stuff;
+# purpose: Fits an ordinary least squares regression model
+# input: x and y vectors of numeric. Must be same length
+# output: entire model summary from lm 
+#------------------------------------------------- 
+calculate_stuff <- function(x_var=runif(10),y_var=runif(10)) {
+reg_model <- lm(y_var~x_var)
+return(summary(reg_model))
+}
+calculate_stuff()
+```
+
+#### Building the `SummarizeOutput()` Function
+
+```{r, eval=FALSE}
+##################################################
+# FUNCTION: summarize_output
+# purpose: pull elements from model summary list
+# input: list from summary call of lm
+# output: vector of regression residuals 
+#------------------------------------------------- 
+summarize_output <- function(z=NULL) {
+if(is.null(z)) {
+  z <- summary(lm(runif(10)~runif(10)))
+}  
+  return(z$residuals)
+}
+summarize_output()
+```
+
+#### Building the `GraphResults()` Function
+
+```{r, eval=TRUE}
+##################################################
+# FUNCTION: graph_results
+# purpose: graph data and fitted OLS line
+# input: x and y vectors of numeric. Must be same length
+# output: creates graph 
+#------------------------------------------------- 
+graph_results <- function(x_var=runif(10), y_var=runif(10)) {
+d_frame <- data.frame(x_var,y_var)
+
+reg_plot <- ggplot(data=d_frame) +
+            aes(x=x_var,y=y_var) +
+            geom_point() +
+            stat_smooth(method=lm,se=0.95) # default se=0.95 
+print(reg_plot)
+ ggsave(filename="reg_plot.pdf",plot=reg_plot,device="pdf")
+
+message("Message: Regression graph created")
+}
+graph_results()
+str(graph_results())
+```
+
+#### Building the `get_data()` Function
+```{r, eval=FALSE}
+##################################################
+# FUNCTION: get_data
+# purpose: read in a .csv file
+# input: .csv file
+# output: data frame
+#------------------------------------------------- 
+get_data <- function(file_name=NULL) {
+if(is.null(fileName)) {
+  d_frame <- data.frame(ID=101:110,
+                          var_a=runif(10),
+                          var_b=runif(10))
+}  else {
+  d_frame <- read.table(file=file_name,
+                          header=TRUE,
+                          sep=",") 
+  }
+  return(data_frame)
+}
+
+
+get_data()
+
+```
+
+#### Linking each of the functions
+Now each function works, but they are all using their defaults and are not "talking" to each other. To link them, we first must create a very small number of **global variables** which can be passed down to some of our functions as parameters. In this case, we need 3 of them:
+
+1. The name of the inputdata file
+2. The column of data in the data frame that contains the x variable
+3. The column of data in the data frame that contains the y variable
+
+```{r, eval=FALSE}
+# Global variables
+#----------------------------------------------
+ant_file <- "antcountydata.csv" # New England ant county data
+x_col <- 7 # column 7, latitude center of each county
+y_col <- 5 # column 5, number of ant species
+#----------------------------------------------
+
+# Program body
+temp1 <- get_data(file_name=ant_file) # construct the data frame
+
+pred <- temp1[,x_col] # extract the predictor variable
+res <- temp1[,y_col] # extract the response variable
+
+temp2 <- calculate_stuff(x_var=pred,y_var=res) # fit the model
+temp3 <- summarize_output(temp2) # extract the residuals
+
+graph_results(x_var=pred, y_var=res) # create graph
+
+print(temp3) # show the residuals
+print(temp2) # show the model summary
+```
+#### Overall Program Structure
+```
+# Header #############################
+# author, date, what program does -- add lots of detail
+
+# Initialization ####################
+# call libraries (e.g. tidyverse)
+# set random number seed (use set.seed(integer))
+
+# Functions ########################
+# include all functions here
+# OR.. source(Functions.R) OR source(function1.R)
+                              source(function2.R) 
+                              source(function3.R)
+
+# Global Variables #####################
+# should be relatively few of these
+# use them to pass to functions
+
+# Program Body #########################
+# use functions and global variables
+# use temp variables to hold intermediate pieces of output
+# functions should create and save all graphical and numeric output
+
+```
+#### Snippet for a general script template
+
+```
+snippet m_script
+	# Description --------------------------------
+	# Description of script
+	
+	r paste("#" ,format(Sys.Date(),format="%d %b %Y"))
+	# NJG
+	
+	# Initialize ---------------------------------
+	library(tidyverse)
+	
+	# set.seed(100)
+	
+	# library(TeachingDemos)
+	# char2seed("espresso withdrawal")
+	# char2seed("espresso withdrawal",set=FALSE)
+	
+	# Load Functions -----------------------------
+	
+	# Global Variables ---------------------------
+	
+	# Program Body -------------------------------
+```	
+	
