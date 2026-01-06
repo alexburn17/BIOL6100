@@ -38,19 +38,21 @@ Date  | Lecture | Homework
 January 13  | [Introduction](Lectures/Introduction.html) | -  
 January 14  | - | [Homework #1](Homeworks/Homework_01.html)             
 January 15  | [GitHub](Lectures/GitHub.html) | -  
-January 2  | [Markdown](Lectures/Markdown.html) | -
+January 20  | [Markdown](Lectures/Markdown.html) | -
 January 21 | - |  [Homework #2](Homeworks/Homework_02.html)
-January 22  | [Regular Expressions](Lectures/RegularExpressions.html) | -
-January 27  | [Atomic Vectors I](Lectures/AtomicVectors_I.html) | - 
-January 28  |  -  | [Homework #3](Homeworks/Homework_03.html)
-January 29  | [Atomic Vectors II](Lectures/AtomicVectors_II.html) | - 
-February 3  | [Matrices, Lists, Data Frames](Lectures/MatricesListsDataFrames.html) | - 
-February 4  | **Portfolio Check #1**  | [Homework #4](Homeworks/Homework_04.html)
-February 5  | [Matrices, Lists, Data Frames II](Lectures/MatricesListsDataFrames.html)| - 
-February 10  | [Functions I](Lectures/Functions.html) | -
+January 22  | [Atomic Vectors I](Lectures/AtomicVectors_I.html) | - 
+January 27  | [Atomic Vectors II](Lectures/AtomicVectors_II.html) | - 
+January 28  |  -  | [Homework #3](Homeworks/Homework_04.html)
+January 29  | [Matrices, Lists, Data Frames](Lectures/MatricesListsDataFrames.html) | - 
+February 3  | [Matrices, Lists, Data Frames II](Lectures/MatricesListsDataFrames.html)| - 
+February 4  | **Portfolio Check #1**  | [Homework #4](Homeworks/Homework_05.html)
+February 5  | [Functions I](Lectures/Functions.html) | -
+February 10  | [Functions II](Lectures/Functions.html) | -
 February 11  | -  | [Homework #5](Homeworks/Homework_05.html)
 February 12   | [Functions II](Lectures/Functions.html) | -
 February 17 | [Control Structures](Lectures/ControlStructures_I.html)| -
+
+<!--
 February 18  | -  | [Homework # 6](Homeworks/Homework_08.html)
 February 19 | [For Loops I](Lectures/ForLoops_I.html)| -
 February 24  |[For Loops II](Lectures/ForLoops_II.html) | [(Probability Distributions)](Lectures/ProbabilityDistributions.html)
@@ -83,7 +85,7 @@ April 23  | [File Batch Processing III](Lectures/FileBatchProcessing.html) | -
 April 28  | Lecture Spillover Day | -
 April 29  | Lecture Spillover Day | -
 April 30  | Lecture Spillover Day | - 
-
+-->
 ___
 
 ### Important Dates
