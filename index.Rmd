@@ -23,7 +23,7 @@ Welcome to computational biology! This semester, we will be taking a look at the
 
 [Course Syllabus](CourseMaterials/CourseSyllabus.html)   
 
-[R Scripts](Scripts/RScripts.html)
+[R Scripts](Scripts/RScripts.html
 
 [Example Datasets](Datasets/Example_Datasets.html)
 

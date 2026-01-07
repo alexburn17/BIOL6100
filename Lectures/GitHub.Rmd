@@ -1,7 +1,7 @@
 ---
 title: 'GitHub'
-author: "Nicholas J. Gotelli"
-date: "16 January 2025"
+author: "P. Alexander Burnham"
+date: "7 January 2026"
 output:
   html_document:
     highlight: tango
@@ -10,156 +10,291 @@ output:
   pdf_document: default
 ---
 
+
+
 ## Learning git and GitHub
-- multiple copies of files
-- access to past copies
-- originally developed for teams of coders interacting on a single project
-- learn how to use for your own work
-- use for building portfolio and maintaining webpage
-- use in tandem with a project in r studio, but can be used with any files
+
+* multiple copies of files
+* access to past copies
+* originally developed for teams of coders interacting on a single project
+* learn how to use for your own work
+* use for building portfolio and maintaining webpage
+* use in tandem with a project in Positron, but can be used with any files
 
 ### Basic Vocabulary
-- `Version Control` A system for maintaining current and past copies of all of your files and a record of all the changes you have made; 
-- `git` Version control software for tracking your project on your local computer
-- `GitHub` A free, public remote website where your project is permanently hosted
-- `Repository` Any collection of files that belong to the same project, plus a few special `git` files that set up the version control. Also called a `repo` by hipster programmers.
-- `Clone` Create a local copy of a repository from the GitHub website to your own website. You can clone from your own repository or anyone else's that is posted on GitHub. Once the files are on your local computer you can edit or use them as you like. However, you can only change files on GitHub for the repositories that you yourself created or for projects that you have been invited to collaborate on with others.
-- `Commit (the noun)` A snapshot of your file system at a particular time. Since your last commit, it keeps track of the files you currently have, the ones you have deleted or added, and any changes you have made to files.
-- `Commit (the verb)` When you commit, you are taking a snapshot of your files at the current time. You must add a summary of the commit that briefly describes what changes you have made (such as "add new homework file"). Note that all commits affect only the local copy of your repository. They do not affect the remote copy that is stored on GitHub
-- `Push` Pushing a set of changes means copying them from your local repository up to GitHub.
-- `Pull(=fetch)` Pulling means copying the repository in its current state on GitHub down to your local repository. This would incorporate any changes that others have made (and pushed) in a collaborative project.
 
-# Creating a webpage hosted by github for an r project
+* `Version Control` A system for maintaining current and past copies of all of your files and a record of all the changes you have made;
+* `git` Version control software for tracking your project on your local computer
+* `GitHub` A free, public remote website where your project is permanently hosted
+* `Repository` Any collection of files that belong to the same project, plus a few special `git` files that set up the version control. Also called a `repo` by hipster programmers.
+* `Clone` Create a local copy of a repository from the GitHub website to your own computer.
+* `Commit (the noun)` A snapshot of your file system at a particular time.
+* `Commit (the verb)` Taking a snapshot of your files at the current time with a short message describing changes.
+* `Push` Copying committed changes from your local repository up to GitHub.
+* `Pull (= fetch)` Copying the current state of the repository on GitHub down to your local machine.
 
-## Set the location for the new project
-* from the Project pull-down (upper-right corner of RStudio window) choose `Close Project`
-* from the console run the command `getwd()`
-* from the `Session` menu set the working directory (choose directory) to where you want the new repository to be created
-* from the console run the command `getwd()` a second time (to confirm new location)
+# Creating a webpage hosted by GitHub using Positron and Quarto
 
-## Create the new project and move to it
-* from the console run command `library(devtools)`
-* from console run command `create_project("ProjectName")` This command creates the project and opens a new RStudio environment
-* close the original RStudio environment and move to your new RStudio project window
+> These instructions mirror the traditional RStudio + `.Rmd` workflow, but use **Positron** and **Quarto (`.qmd`)**.
+
+---
+
+## REQUIRED: Install Quarto system-wide (macOS, Windows, Linux)
+
+Quarto **must** be installed system-wide so it works in Positron, the Terminal, and GitHub Pages.
+
+### macOS (Intel and Apple Silicon)
+
+1. Go to [https://quarto.org/download/](https://quarto.org/download/)
+2. Download the **macOS `.pkg` installer**
+3. Run the installer and accept the defaults
+4. Restart **Terminal** (important)
+
+Verify:
+
+```bash
+quarto --version
+```
+
+If you see `zsh: command not found: quarto`, Quarto is **not** installed correctly.
+
+---
+
+### Windows (Required)
+
+1. Go to [https://quarto.org/download/](https://quarto.org/download/)
+2. Download the **Windows `.msi` installer**
+3. Double-click the installer and follow the prompts
+4. **Restart your computer** after installation
+
+### Verify on Windows
+
+Open **PowerShell** (recommended) or **Command Prompt** and run:
+
+```powershell
+quarto --version
+```
+
+You must see a version number. If you see an error such as:
+
+```
+'quarto' is not recognized as an internal or external command
+```
+
+then Quarto is not on your system PATH and must be reinstalled.
+
+---
+
+### Linux
+
+Download the appropriate package from [https://quarto.org/download/](https://quarto.org/download/):
+
+* `.deb` for Debian / Ubuntu
+* `.rpm` for Fedora / Red Hat
+
+After installation, verify:
+
+```bash
+quarto --version
+```
+
+---
+
+## Ensure Positron uses the system-wide Quarto installation
+
+If Positron was installed before Quarto, it may still use a bundled copy.
+
+### Check which Quarto Positron is using
+
+In the **Positron Terminal**, run:
+
+```bash
+which quarto
+```
+
+If you see:
+
+```
+/Applications/Positron.app/Contents/Resources/app/quarto/bin/quarto
+```
+
+Positron is using its internal Quarto and must be fixed.
+
+### Explicitly set the Quarto path in Positron
+
+1. Open **Positron → Settings**
+2. Search for **Quarto**
+3. Set **Quarto: Path** to:
+
+Intel Macs:
+
+```
+/usr/local/bin/quarto
+```
+
+Apple Silicon Macs:
+
+```
+/opt/homebrew/bin/quarto
+```
+
+4. Restart Positron
+
+Re-check:
+
+```bash
+which quarto
+```
+
+---
+
+## Create the new project
+
+* In Positron: **File → New Project → New Directory → Quarto Website Project**
+* Choose a project name and location (this will become your GitHub repository name)
+* Finish setup and open the new project
+* In the Terminal, run `pwd` to check the current directory
+
+---
 
 ## Add git functionality to the new project
-* from the console run the command `library(devtools)` Remember the `devtools` package is not open in your new project
-* from the console run the command `use_git()`
-* respond affirmative to the question "Is it ok to commit them?"
-* respond affirmative to the question "Restart now?"
 
-## Set up and link your local git repository to your GitHub account
-* after RStudio reopens, from the console run `library(devtools)`
-* from the console run the command `use_github()`
-* go to your GitHub site to admire your new repository!
+* Open the Terminal
+* Initialize git:
+
+```bash
+git init
+```
+
+---
+
+## Link your local repository to GitHub
+
+This step involves **both your local Positron environment and the GitHub website**.
+
+### Step 1 — Create a repository on GitHub (Web Interface)
+
+* Go to GitHub and log in
+* Click **New Repository**
+* Use the **same name** as your local project
+* Set visibility to **Public**
+* Do **not** initialize with a README, `.gitignore`, or license (we already have these locally)
+
+### Step 2 — Connect your local repository to GitHub (Positron Terminal)
+
+* Open the **Terminal pane in Positron**
+* Run the following commands, replacing `USERNAME` and `REPO` with your GitHub username and repository name:
+
+```bash
+git remote add origin https://github.com/USERNAME/REPO.git
+git branch -M main
+git push -u origin main
+```
+
+**Explanation:**
+
+* `git remote add origin` tells your local repository where the GitHub repository is
+* `git branch -M main` renames your local default branch to `main` (if not already named)
+* `git push -u origin main` pushes your current branch to GitHub and sets it to track the remote branch
+
+> After this, your local Positron project and your GitHub repository are connected, and you can push/pull changes from either environment.
+
+---
 
 ## Clean up the new project
-* Using the Delete icon in the file panel, remove the `R` folder
-* click on the `.gitignore` file 
-* add line `gitignore` file: `*.Rproj` 
-* optionally add lines `gitignore` file: `*.pdf` for other file types or individual files to ignore
-* optionally add a license with use_mit_license(copyright="YourName")
+
+* Edit `.gitignore`
+* Add:
+
+```
+*.pdf
+*.docx
+```
+
+---
 
 ## Commit changes to the new project
-* Click on the terminal tab to open a new terminal for a git commit
-* display a list of changed files `git status`
-* stage the changes `git add -A` 
-* display the staged changes `git status`
-* git commit -am 'first commit' (makes local commit)
-* git status
-* git push (push the changes up to the GitHub repo)
 
-# Build and host a website associated with your new repository
-* 
-* from the pulldown menu in Rstudio, select a new markdown file `R Markdown...`
-* change title to "Initial webpage set up" (or some such thing)
-* save this file with file name "index" (RStudio will provide the .Rmd suffix)
-* run CTRL-SHFT-K to "knit" the file
-
-## Commit changes from the terminal
-* switch from `Console` to `Terminal` panel
-* `git status`
-* `git add -A` 
-* `git status`
-* `git commit -am 'add webpage' `
-* `git status`
-* `git push` 
-
-## Host the "index" webpage
-* Return to GitHub public repository
-* click on your name to go to your sign in
-* Go to "Settings"
-* Scroll down and under "Pages" and "Branch" change from "None" to "main"
-* Wait a minute (! could be very slow!!) and click the new link at "Your site is live at..."
-* New webpage should display
-* Note the address: https://UserName.github.io/RepoName/
-* Example: https://ngotelli.github.io/Trial/
-
-## Optional: rename "master" branch to "main" branch
-
-These instructions are modified from [Scott Hanselman's blog](  https://www.hanselman.com/blog/easily-rename-your-git-default-branch-from-master-to-main) 
-
-* from the github General page, find the box to change "master" to "main"
-
-
-* Now go to each of your local clones of this repository and run the following from the terminal prompt (`$` is the prompt before the command)
-
-```
-$ git checkout master
-$ git branch -m master main
-$ git fetch
-$ git branch --unset-upstream
-$ git branch -u origin/main
-$ git symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/main
-# git config --global init.defaultBranch main
-```
-These commands need to be issued only once for each local copy of the repository. These commands do the following:
-
-```
-1. Go to the master branch
-2. Rename master to main locally
-3. Get the latest commits from the server
-4. Remove the link to origin/master
-5. Add a link to origin/main
-6. Update the default branch to be origin/main
-7. Change git configuration to recognize main (may only need to be done once)
+```bash
+git status
+git add -A
+git commit -m 'initial project setup'
+git push
 ```
 
+---
 
+# Build and host a website
 
-# Basic workflow for git from the terminal
+## Create the homepage
 
+* Open `index.qmd`
+* Edit the title and content
+* Render using **Render** or:
 
-## Check things out before starting your work
-* `git status` (make sure your local repo is not ahead of the remote)
-* `git pull` (just in case there was a change made from another location)
-* `git status`  (ready to start working)
+```bash
+quarto render
+```
 
-## Make changes
-* modify files, including knitting new versions of html pages or pdfs
-* delete files
-* add files
+---
 
-## Stage changes
-* `git status`
-* `git add -A`
-* `git status`
+## Commit webpage changes
 
-## Commit changes
-* `git commit -am 'write a brief informative commit message'` (no caps or punctuation, present tense)
-* `git status`
+```bash
+git status
+git add -A
+git commit -m 'add website'
+git push
+```
 
-## Push changes up to GitHub
-* `git push`
+---
+
+## Host the website with GitHub Pages
+
+* Go to repository → **Settings → Pages**
+* Source: `main` branch
+* Folder: `/docs`
+* Save
+
+Your site will be live at:
+
+```
+https://USERNAME.github.io/REPO/
+```
+
+---
+
+# Basic git workflow from the terminal
+
+## Before starting work
+
 * `git status`
 * `git pull`
 
-# Summary of workflow
-- check `status` of the local repo (uncommitted changes? local commits ahead of remote?)
-- `pull` any changes from the repo (incorporating changes pushed by others)
-- do some work (edit, create, delete files)
-- `add` changes (local)
-- `commit` changes (local)
-- `push` changes (from local repo to GitHub)
+## Make changes
 
-[1]: From the blog post https://www.hanselman.com/blog/easily-rename-your-git-default-branch-from-master-to-main
+* Edit `.qmd` files
+* Render to HTML
+
+## Stage changes
+
+* `git add -A`
+
+## Commit
+
+* `git commit -m 'describe change'`
+
+## Push
+
+* `git push`
+
+---
+
+# Summary of workflow
+
+* `status`
+* `pull`
+* edit / render
+* `add`
+* `commit`
+* `push`
