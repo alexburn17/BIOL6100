@@ -1,7 +1,7 @@
 ---
 title: 'Homework #2'
-author: "Nicholas J. Gotelli"
-date: "22 January 2025"
+author: "P. Alexander Burnham"
+date: "8 January 2026"
 output: 
   html_document: 
     highlight: tango
@@ -12,17 +12,20 @@ As a class:
 
 1. Your TA will walk you through the steps to build a repository in GitHub, and a local version on your desktop. Call this repository "PracticeRepo".
 
-2. Create an `index.Rmd` file that you will post as an html webpage.
+2. Create an `index.qmd` file that you will post as an html webpage.
 
-3. Create a new page called `newpage.Rmd` and create a link on your index file.
+3. Create a new page called `newpage.qmd`, render it to html and create a link to it on your index file.
 
 4. Make changes, stage them, and push them to your new webpage.
 
-On your own:  
+On your own:
+
+You will now build your website. Use the information in the github lecture: [Github Lecture](https://alexburn17.github.io/BIOL6100/Lectures/GitHub.html) to help guide you.
+
 
 5. After you have done this a few times and are comfortable with this process, set up your repository for this course, using your own last name as part of the repository name: `LastNameBio381`
 
-6. Once your index page is set up and your webpage is hosted and visible on the internet, build a link and a new page called `Homework_02.Rmd`.
+6. Once your index page is set up and your webpage is hosted and visible on the internet, build a link and a new page called `Homework_02.qmd`.
 
 7. Add a sentence or two at the start of your index page describing what the site is for. Knit the document and commit your changes in the usual way. Soon you will learn how to modify and edit this initial page extensively.
 
@@ -34,11 +37,8 @@ What to provide to your TA by the end of the day:
   - the link to your new webpage `https://YourGitHubUserName.github.io/LastNameBio381/`
   - a "fun fact": something distinctive about you or your past that will help everyone instantly remember your name and who you are. For examples, see the list from the students in last year's course on the [course homepage](https://gotellilab.github.io/Bio381/). Once we have all of this information, we will update the homepage with the entries from this year's class.
   
-Congratulations! You are now a GitHub user!
+Congratulations! You are now a GitHub user! This website is very basic looking, but as we saw in class, Quatro themes are very powerful and in the future, you will be able to modify your site to your own liking and organizational style. 
 
-Helpful Links:
 
-[Markdown basics](https://rmarkdown.rstudio.com/authoring_basics.html)  
-[Setting up Jekyll themes](https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/adding-a-theme-to-your-github-pages-site-using-jekyll)
 
 
