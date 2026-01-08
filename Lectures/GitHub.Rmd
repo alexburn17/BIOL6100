@@ -10,8 +10,6 @@ output:
   pdf_document: default
 ---
 
-
-
 ## Learning git and GitHub
 
 * multiple copies of files
@@ -151,9 +149,9 @@ which quarto
 ## Create the new project
 
 * In Positron: **File → New Project → New Directory → Quarto Website Project**
-* Choose a project name and location (this will become your GitHub repository name)
+* Choose a project name (this will become your GitHub repository name)
 * Finish setup and open the new project
-* In the Terminal, run `pwd` to check the current directory
+* In the Terminal, run pwd to check the current directory
 
 ---
 
@@ -178,7 +176,7 @@ This step involves **both your local Positron environment and the GitHub website
 * Click **New Repository**
 * Use the **same name** as your local project
 * Set visibility to **Public**
-* Do **not** initialize with a README, `.gitignore`, or license (we already have these locally)
+* Select the options to initialize with a README, `.gitignore`, and license.
 
 ### Step 2 — Connect your local repository to GitHub (Positron Terminal)
 
@@ -197,23 +195,75 @@ git push -u origin main
 * `git branch -M main` renames your local default branch to `main` (if not already named)
 * `git push -u origin main` pushes your current branch to GitHub and sets it to track the remote branch
 
-> After this, your local Positron project and your GitHub repository are connected, and you can push/pull changes from either environment.
+---
+
+### ⚠️ Troubleshooting: `src refspec main does not match any`
+
+If you see this error:
+
+```
+error: src refspec main does not match any
+error: failed to push some refs
+```
+
+it means **there are no commits yet**, so the `main` branch does not exist.
+
+#### Fix (Most Common Case)
+
+1. Make an initial commit **before** pushing:
+
+```bash
+git status
+git add -A
+git commit -m 'initial commit'
+```
+
+2. Now push again:
+
+```bash
+git branch -M main
+git push -u origin main
+```
+
+This should succeed.
+
+---
+
+#### Check which branch you are on
+
+If the error persists, run:
+
+```bash
+git branch
+```
+
+If you see `master` instead of `main`, push with:
+
+```bash
+git push -u origin master
+```
+
+You can rename it later if needed.
 
 ---
 
 ## Clean up the new project
 
 * Edit `.gitignore`
-* Add:
+* Open the file in the directory and add:
 
 ```
 *.pdf
 *.docx
 ```
+This will ensure that PDFs and .doc files are not added to the repository. This can
+Be useful for other large file types like images and videos.
 
 ---
 
 ## Commit changes to the new project
+
+If you haven't already, make your first commit. 
 
 ```bash
 git status
@@ -230,7 +280,7 @@ git push
 
 * Open `index.qmd`
 * Edit the title and content
-* Render using **Render** or:
+* Render using **Render** (Mac: cmd-shift-k - PC: ctrl-shift-k) or...
 
 ```bash
 quarto render
@@ -252,9 +302,9 @@ git push
 ## Host the website with GitHub Pages
 
 * Go to repository → **Settings → Pages**
-* Source: `main` branch
-* Folder: `/docs`
-* Save
+* Source: Deploy from a branch
+* Branch: `/main`
+* Click Save
 
 Your site will be live at:
 
