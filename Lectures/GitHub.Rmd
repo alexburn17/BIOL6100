@@ -303,7 +303,7 @@ git push
 
 * Go to repository → **Settings → Pages**
 * Source: Deploy from a branch
-* Branch: `/main`
+* Branch: `/main` and folder should be /docs
 * Click Save
 
 Your site will be live at:
