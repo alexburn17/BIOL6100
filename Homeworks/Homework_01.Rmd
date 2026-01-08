@@ -19,7 +19,7 @@ The TA will make a brief presentation and step you through a series of checks to
 
 Due by the end of lab:    
 
-* The link to your github repository: `https://github.com/YourUserName`
+* The link to your github account: `https://github.com/YourUserName`
 * Show your TA that you can run the following R code when the R interpreter is selected:
 
 ```
