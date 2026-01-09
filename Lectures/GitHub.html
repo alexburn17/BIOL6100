@@ -237,7 +237,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -272,11 +272,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 code span.al { color: #ef2929; } 
 code span.an { color: #8f5902; font-weight: bold; font-style: italic; } 
-code span.at { color: #204a87; } 
+code span.at { color: #c4a000; } 
 code span.bn { color: #0000cf; } 
 code span.cf { color: #204a87; font-weight: bold; } 
 code span.ch { color: #4e9a06; } 
-code span.cn { color: #8f5902; } 
+code span.cn { color: #000000; } 
 code span.co { color: #8f5902; font-style: italic; } 
 code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } 
 code span.do { color: #8f5902; font-weight: bold; font-style: italic; } 
@@ -285,14 +285,14 @@ code span.dv { color: #0000cf; }
 code span.er { color: #a40000; font-weight: bold; } 
 code span.ex { } 
 code span.fl { color: #0000cf; } 
-code span.fu { color: #204a87; font-weight: bold; } 
+code span.fu { color: #000000; } 
 code span.im { } 
 code span.in { color: #8f5902; font-weight: bold; font-style: italic; } 
 code span.kw { color: #204a87; font-weight: bold; } 
 code span.op { color: #ce5c00; font-weight: bold; } 
 code span.ot { color: #8f5902; } 
 code span.pp { color: #8f5902; font-style: italic; } 
-code span.sc { color: #ce5c00; font-weight: bold; } 
+code span.sc { color: #000000; } 
 code span.ss { color: #4e9a06; } 
 code span.st { color: #4e9a06; } 
 code span.va { color: #000000; } 
@@ -494,7 +494,7 @@ Positron, the Terminal, and GitHub Pages.</p>
 <li>Restart <strong>Terminal</strong> (important)</li>
 </ol>
 <p>Verify:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="ex">quarto</span> <span class="at">--version</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> <span class="at">--version</span></span></code></pre></div>
 <p>If you see <code>zsh: command not found: quarto</code>, Quarto is
 <strong>not</strong> installed correctly.</p>
 <hr />
@@ -513,7 +513,7 @@ installer</strong></li>
 <h3>Verify on Windows</h3>
 <p>Open <strong>PowerShell</strong> (recommended) or <strong>Command
 Prompt</strong> and run:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>quarto <span class="op">--</span>version</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>quarto <span class="op">--</span>version</span></code></pre></div>
 <p>You must see a version number. If you see an error such as:</p>
 <pre><code>&#39;quarto&#39; is not recognized as an internal or external command</code></pre>
 <p>then Quarto is not on your system PATH and must be reinstalled.</p>
@@ -527,7 +527,7 @@ Prompt</strong> and run:</p>
 <li><code>.rpm</code> for Fedora / Red Hat</li>
 </ul>
 <p>After installation, verify:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="ex">quarto</span> <span class="at">--version</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> <span class="at">--version</span></span></code></pre></div>
 <hr />
 </div>
 </div>
@@ -538,7 +538,7 @@ copy.</p>
 <div id="check-which-quarto-positron-is-using" class="section level3">
 <h3>Check which Quarto Positron is using</h3>
 <p>In the <strong>Positron Terminal</strong>, run:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">which</span> quarto</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span> quarto</span></code></pre></div>
 <p>If you see:</p>
 <pre><code>/Applications/Positron.app/Contents/Resources/app/quarto/bin/quarto</code></pre>
 <p>Positron is using its internal Quarto and must be fixed.</p>
@@ -558,7 +558,7 @@ copy.</p>
 <li>Restart Positron</li>
 </ol>
 <p>Re-check:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">which</span> quarto</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span> quarto</span></code></pre></div>
 <hr />
 </div>
 </div>
@@ -580,7 +580,7 @@ name)</li>
 <li>Open the Terminal</li>
 <li>Initialize git:</li>
 </ul>
-<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">git</span> init</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> init</span></code></pre></div>
 <hr />
 </div>
 <div id="link-your-local-repository-to-github" class="section level2">
@@ -606,9 +606,9 @@ Terminal)</h3>
 <li>Run the following commands, replacing <code>USERNAME</code> and
 <code>REPO</code> with your GitHub username and repository name:</li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">git</span> remote add origin https://github.com/USERNAME/REPO.git</span>
-<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">-M</span> main</span>
-<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-u</span> origin main</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote add origin https://github.com/USERNAME/REPO.git</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">-M</span> main</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-u</span> origin main</span></code></pre></div>
 <p><strong>Explanation:</strong></p>
 <ul>
 <li><code>git remote add origin</code> tells your local repository where
@@ -633,24 +633,27 @@ error: failed to push some refs</code></pre>
 <ol style="list-style-type: decimal">
 <li>Make an initial commit <strong>before</strong> pushing:</li>
 </ol>
-<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">git</span> status</span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="fu">git</span> add <span class="at">-A</span></span>
-<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">&#39;initial commit&#39;</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="at">-A</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">&#39;initial commit&#39;</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Now push again:</li>
 </ol>
-<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">-M</span> main</span>
-<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-u</span> origin main</span></code></pre></div>
-<p>This should succeed.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">-M</span> main</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-u</span> origin main</span></code></pre></div>
+<p>This should succeed. If this is your first commit, you will be
+prompted to sign in to your github account and input a 6 digit code to
+verify you are allowing positron to talk to git. Just follow the
+prompts.</p>
 <hr />
 </div>
 <div id="check-which-branch-you-are-on" class="section level4">
 <h4>Check which branch you are on</h4>
 <p>If the error persists, run:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">git</span> branch</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch</span></code></pre></div>
 <p>If you see <code>master</code> instead of <code>main</code>, push
 with:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-u</span> origin master</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-u</span> origin master</span></code></pre></div>
 <p>You can rename it later if needed.</p>
 <hr />
 </div>
@@ -672,10 +675,10 @@ and videos.</p>
 <div id="commit-changes-to-the-new-project" class="section level2">
 <h2>Commit changes to the new project</h2>
 <p>If you haven’t already, make your first commit.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">git</span> status</span>
-<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a><span class="fu">git</span> add <span class="at">-A</span></span>
-<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">&#39;initial project setup&#39;</span></span>
-<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a><span class="fu">git</span> push</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="at">-A</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">&#39;initial project setup&#39;</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push</span></code></pre></div>
 <hr />
 </div>
 </div>
@@ -689,15 +692,15 @@ and videos.</p>
 <li>Render using <strong>Render</strong> (Mac: cmd-shift-k - PC:
 ctrl-shift-k) or…</li>
 </ul>
-<div class="sourceCode" id="cb19"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="ex">quarto</span> render</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render</span></code></pre></div>
 <hr />
 </div>
 <div id="commit-webpage-changes" class="section level2">
 <h2>Commit webpage changes</h2>
-<div class="sourceCode" id="cb20"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">git</span> status</span>
-<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a><span class="fu">git</span> add <span class="at">-A</span></span>
-<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">&#39;add website&#39;</span></span>
-<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a><span class="fu">git</span> push</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="at">-A</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">&#39;add website&#39;</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push</span></code></pre></div>
 <hr />
 </div>
 <div id="host-the-website-with-github-pages" class="section level2">
@@ -705,7 +708,7 @@ ctrl-shift-k) or…</li>
 <ul>
 <li>Go to repository → <strong>Settings → Pages</strong></li>
 <li>Source: Deploy from a branch</li>
-<li>Branch: <code>/main</code></li>
+<li>Branch: <code>/main</code> and folder should be /docs</li>
 <li>Click Save</li>
 </ul>
 <p>Your site will be live at:</p>
@@ -759,6 +762,9 @@ ctrl-shift-k) or…</li>
 <li><code>commit</code></li>
 <li><code>push</code></li>
 </ul>
+</div>
+<div id="talk-about-cloning-repositories" class="section level1">
+<h1>Talk about cloning repositories…</h1>
 </div>
 
 

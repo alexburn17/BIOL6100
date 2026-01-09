@@ -344,18 +344,34 @@ can now run R and python code in Positron. You will also make a github
 account.</p>
 <p>The TA will make a brief presentation and step you through a series
 of checks to make sure you are ready to go on all of these things.</p>
+<p>Install the software (Positron, R, miniconda) if you haven’t already.
+Familiarize yourself with Positron and create a folder that contains an
+R file and a Python file.</p>
 <p>Due by the end of lab:</p>
 <ul>
 <li>The link to your github account:
 <code>https://github.com/YourUserName</code></li>
-<li>Show your TA that you can run the following R code when the R
-interpreter is selected:</li>
+<li>Show your TA that you can run the following R code in your new R
+file when the R interpreter is selected:</li>
 </ul>
 <pre><code>x &lt;- 3 + 2
 print(x)</code></pre>
-<p>…and this Python code when the python interpreter is selected.</p>
+<p>…and this Python code in your new python file when the python
+interpreter is selected.</p>
 <pre><code>for i in range(3):
     print(i)</code></pre>
+<div id="help" class="section level3">
+<h3>Help:</h3>
+<p>If you are having trouble getting Positron to talk with miniconda
+(python), here is a video I made (<a href="https://www.youtube.com/watch?v=Mz9FqTDffdw" class="uri">https://www.youtube.com/watch?v=Mz9FqTDffdw</a>) documenting
+the whole process and running through the layout of Positron.</p>
+<p>The following lines mentioned in the video will create a new python
+environment called myNewEnv with a python v3.9 installation. Run them
+line by line in the terminal in Positron.</p>
+<pre><code>conda create -n myNewEnv python=3.9
+conda activate myNewEnv
+conda install ipykernel psutil numpy pandas matplotlib scipy</code></pre>
+</div>
 
 
 

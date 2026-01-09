@@ -17,22 +17,35 @@ Specifically, you should have the most current versions of R and Python/minicond
 
 The TA will make a brief presentation and step you through a series of checks to make sure you are ready to go on all of these things.
 
+Install the software (Positron, R, miniconda) if you haven't already. Familiarize yourself with Positron and create a folder that contains an R file and a Python file.
+
 Due by the end of lab:    
 
 * The link to your github account: `https://github.com/YourUserName`
-* Show your TA that you can run the following R code when the R interpreter is selected:
+* Show your TA that you can run the following R code in your new R file when the R interpreter is selected:
 
 ```
 x <- 3 + 2
 print(x)
 ```
 
-...and this Python code when the python interpreter is selected. 
+...and this Python code in your new python file when the python interpreter is selected. 
 ```
 for i in range(3):
     print(i)
 ```
 
+### Help:
 
+
+If you are having trouble getting Positron to talk with miniconda (python), here is a video I made (https://www.youtube.com/watch?v=Mz9FqTDffdw) documenting the whole process and running through
+the layout of Positron.
+
+The following lines mentioned in the video will create a new python environment called myNewEnv with a python v3.9 installation. Run them line by line in the terminal in Positron.
+```
+conda create -n myNewEnv python=3.9
+conda activate myNewEnv
+conda install ipykernel psutil numpy pandas matplotlib scipy
+```
 
 

@@ -225,7 +225,7 @@ git branch -M main
 git push -u origin main
 ```
 
-This should succeed. 
+This should succeed. If this is your first commit, you will be prompted to sign in to your github account and input a 6 digit code to verify you are allowing positron to talk to git. Just follow the prompts.
 
 ---
 
@@ -348,3 +348,6 @@ https://USERNAME.github.io/REPO/
 * `add`
 * `commit`
 * `push`
+
+# Talk about cloning repositories...
+
