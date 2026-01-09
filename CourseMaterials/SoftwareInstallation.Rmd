@@ -9,7 +9,7 @@ output:
 ---
 Here are the software packages you need to load onto your computer for this course. These programs work on Mac or Windows computers. They are free, safe, and do not take up much disk space. If you already have some of these programs installed, please check to make sure you are using the latest versions.
 
-Before you begin downloading software, please make sure that your operating system (Windows, Linux, or iOS) and browser (Windows Explorer, Firefox, Chrome etc.) are as up-to-date as possible, and that you have installed all the most current patches and updates. The older and more out-of-date your software is, the harder it is to get everything working properly.
+Before you begin downloading software, please make sure that your operating system (Windows, Linux, or Mac) and browser (Windows Explorer, Firefox, Chrome etc.) are as up-to-date as possible, and that you have installed all the most current patches and updates. The older and more out-of-date your software is, the harder it is to get everything working properly.
 
 Go to each software page and follow the instructions for downloading the installer and running it. The installer will go through a number of steps. Always use the complete installation with the default choices at each step. 
 
@@ -39,6 +39,15 @@ Positron is an IDE (Integrated Development Environment), which is a special edit
 
 
 [download Positron](https://positron.posit.co/download.html)
+
+
+
+
+## Learning Positron and Getting it to Recognize R and Python
+
+Here is a video I made that should help get you up and running.
+https://www.youtube.com/watch?v=Mz9FqTDffdw
+
 
 
 ## Installing LaTeX and other useful packages
