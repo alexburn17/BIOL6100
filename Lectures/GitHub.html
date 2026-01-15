@@ -473,6 +473,197 @@ repository on GitHub down to your local machine.</li>
 </ul>
 </div>
 </div>
+<div id="basic-shell-commands-unix-vs-powershell-with-safety-flag" class="section level2">
+<h2>Basic Shell Commands: Unix vs PowerShell (with Safety Flag)</h2>
+<table>
+<colgroup>
+<col width="6%" />
+<col width="28%" />
+<col width="28%" />
+<col width="28%" />
+<col width="7%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Task</th>
+<th>Unix (macOS / Linux)</th>
+<th>PowerShell (Windows)</th>
+<th>Safe Cross-Platform?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Show current directory</td>
+<td><code>pwd</code></td>
+<td><code>pwd</code></td>
+<td>✅ Yes</td>
+<td>Same behavior</td>
+</tr>
+<tr class="even">
+<td>List files</td>
+<td><code>ls</code></td>
+<td><code>ls</code></td>
+<td>✅ Yes</td>
+<td>Alias in PowerShell</td>
+</tr>
+<tr class="odd">
+<td>List all files (hidden)</td>
+<td><code>ls -a</code></td>
+<td><code>ls -Force</code></td>
+<td>❌ No</td>
+<td>Flags differ</td>
+</tr>
+<tr class="even">
+<td>List files with details</td>
+<td><code>ls -l</code></td>
+<td><code>ls</code></td>
+<td>❌ No</td>
+<td>Output differs</td>
+</tr>
+<tr class="odd">
+<td>Change directory</td>
+<td><code>cd</code></td>
+<td><code>cd</code></td>
+<td>✅ Yes</td>
+<td>Same</td>
+</tr>
+<tr class="even">
+<td>Go to home directory</td>
+<td><code>cd ~</code></td>
+<td><code>cd ~</code></td>
+<td>✅ Yes</td>
+<td>Same</td>
+</tr>
+<tr class="odd">
+<td>Go up one level</td>
+<td><code>cd ..</code></td>
+<td><code>cd ..</code></td>
+<td>✅ Yes</td>
+<td>Same</td>
+</tr>
+<tr class="even">
+<td>Go back to last directory</td>
+<td><code>cd -</code></td>
+<td><code>cd -</code></td>
+<td>⚠️ Mostly</td>
+<td>Newer PowerShell only</td>
+</tr>
+<tr class="odd">
+<td>Open folder / file</td>
+<td><code>open .</code></td>
+<td><code>start .</code></td>
+<td>❌ No</td>
+<td>OS-specific</td>
+</tr>
+<tr class="even">
+<td>Open file in default app</td>
+<td><code>open file.txt</code></td>
+<td><code>start file.txt</code></td>
+<td>❌ No</td>
+<td>OS-specific</td>
+</tr>
+<tr class="odd">
+<td>Copy file</td>
+<td><code>cp a.txt b.txt</code></td>
+<td><code>cp a.txt b.txt</code></td>
+<td>✅ Yes</td>
+<td>Alias</td>
+</tr>
+<tr class="even">
+<td>Copy folder</td>
+<td><code>cp -r dir1 dir2</code></td>
+<td><code>cp -r dir1 dir2</code></td>
+<td>⚠️ Mostly</td>
+<td>Behavior differs</td>
+</tr>
+<tr class="odd">
+<td>Move / rename file</td>
+<td><code>mv a.txt b.txt</code></td>
+<td><code>mv a.txt b.txt</code></td>
+<td>✅ Yes</td>
+<td>Alias</td>
+</tr>
+<tr class="even">
+<td>Delete file</td>
+<td><code>rm a.txt</code></td>
+<td><code>rm a.txt</code></td>
+<td>✅ Yes ⚠️</td>
+<td>Permanent delete</td>
+</tr>
+<tr class="odd">
+<td>Delete folder</td>
+<td><code>rm -r dir</code></td>
+<td><code>rm -r dir</code></td>
+<td>⚠️ Mostly</td>
+<td>Dangerous</td>
+</tr>
+<tr class="even">
+<td>Create empty file</td>
+<td><code>touch file.txt</code></td>
+<td><code>New-Item file.txt</code></td>
+<td>❌ No</td>
+<td>Different</td>
+</tr>
+<tr class="odd">
+<td>Create directory</td>
+<td><code>mkdir results</code></td>
+<td><code>mkdir results</code></td>
+<td>✅ Yes</td>
+<td>Alias</td>
+</tr>
+<tr class="even">
+<td>Create nested directories</td>
+<td><code>mkdir -p data/raw</code></td>
+<td><code>mkdir data/raw</code></td>
+<td>❌ No</td>
+<td>Flag differs</td>
+</tr>
+<tr class="odd">
+<td>View file contents</td>
+<td><code>cat file.txt</code></td>
+<td><code>cat file.txt</code></td>
+<td>✅ Yes</td>
+<td>Alias</td>
+</tr>
+<tr class="even">
+<td>View long file</td>
+<td><code>less file.txt</code></td>
+<td><code>more file.txt</code></td>
+<td>❌ No</td>
+<td>Different tools</td>
+</tr>
+<tr class="odd">
+<td>Search text in file</td>
+<td><code>grep &quot;bee&quot; notes.txt</code></td>
+<td><code>Select-String &quot;bee&quot; notes.txt</code></td>
+<td>❌ No</td>
+<td>Different</td>
+</tr>
+<tr class="even">
+<td>Clear terminal</td>
+<td><code>clear</code></td>
+<td><code>clear</code></td>
+<td>✅ Yes</td>
+<td>Same</td>
+</tr>
+<tr class="odd">
+<td>Stop running command</td>
+<td><code>Ctrl + C</code></td>
+<td><code>Ctrl + C</code></td>
+<td>✅ Yes</td>
+<td>Same</td>
+</tr>
+<tr class="even">
+<td>Command help</td>
+<td><code>man ls</code></td>
+<td><code>Get-Help ls</code></td>
+<td>❌ No</td>
+<td>Different systems</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div id="creating-a-webpage-hosted-by-github-using-positron-and-quarto" class="section level1">
 <h1>Creating a webpage hosted by GitHub using Positron and Quarto</h1>
 <blockquote>

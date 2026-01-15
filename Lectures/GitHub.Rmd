@@ -31,6 +31,38 @@ output:
 * `Push` Copying committed changes from your local repository up to GitHub.
 * `Pull (= fetch)` Copying the current state of the repository on GitHub down to your local machine.
 
+
+
+## Basic Shell Commands: Unix vs PowerShell (with Safety Flag)
+
+| Task | Unix (macOS / Linux) | PowerShell (Windows) | Safe Cross-Platform? | Notes |
+|-----|----------------------|----------------------|----------------------|------|
+| Show current directory | `pwd` | `pwd` | ✅ Yes | Same behavior |
+| List files | `ls` | `ls` | ✅ Yes | Alias in PowerShell |
+| List all files (hidden) | `ls -a` | `ls -Force` | ❌ No | Flags differ |
+| List files with details | `ls -l` | `ls` | ❌ No | Output differs |
+| Change directory | `cd` | `cd` | ✅ Yes | Same |
+| Go to home directory | `cd ~` | `cd ~` | ✅ Yes | Same |
+| Go up one level | `cd ..` | `cd ..` | ✅ Yes | Same |
+| Go back to last directory | `cd -` | `cd -` | ⚠️ Mostly | Newer PowerShell only |
+| Open folder / file | `open .` | `start .` | ❌ No | OS-specific |
+| Open file in default app | `open file.txt` | `start file.txt` | ❌ No | OS-specific |
+| Copy file | `cp a.txt b.txt` | `cp a.txt b.txt` | ✅ Yes | Alias |
+| Copy folder | `cp -r dir1 dir2` | `cp -r dir1 dir2` | ⚠️ Mostly | Behavior differs |
+| Move / rename file | `mv a.txt b.txt` | `mv a.txt b.txt` | ✅ Yes | Alias |
+| Delete file | `rm a.txt` | `rm a.txt` | ✅ Yes ⚠️ | Permanent delete |
+| Delete folder | `rm -r dir` | `rm -r dir` | ⚠️ Mostly | Dangerous |
+| Create empty file | `touch file.txt` | `New-Item file.txt` | ❌ No | Different |
+| Create directory | `mkdir results` | `mkdir results` | ✅ Yes | Alias |
+| Create nested directories | `mkdir -p data/raw` | `mkdir data/raw` | ❌ No | Flag differs |
+| View file contents | `cat file.txt` | `cat file.txt` | ✅ Yes | Alias |
+| View long file | `less file.txt` | `more file.txt` | ❌ No | Different tools |
+| Search text in file | `grep "bee" notes.txt` | `Select-String "bee" notes.txt` | ❌ No | Different |
+| Clear terminal | `clear` | `clear` | ✅ Yes | Same |
+| Stop running command | `Ctrl + C` | `Ctrl + C` | ✅ Yes | Same |
+| Command help | `man ls` | `Get-Help ls` | ❌ No | Different systems |
+
+
 # Creating a webpage hosted by GitHub using Positron and Quarto
 
 > These instructions mirror the traditional RStudio + `.Rmd` workflow, but use **Positron** and **Quarto (`.qmd`)**.
