@@ -1,0 +1,16 @@
+---
+title: "Code Chunks"
+format: html
+---
+
+### Using chunk options `echo` and `eval` to control printing of code and output
+
+```{r, echo = T, eval = T}
+plot(runif(50),cex=10*runif(50),col="goldenrod")
+print(rnorm(n=10, mean=10, sd=2))
+```
+
+
+
+
+
