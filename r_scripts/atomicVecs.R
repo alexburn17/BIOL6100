@@ -102,3 +102,18 @@ z + y
 # recycling
 x <- c(1,2)
 z + x
+
+############################
+# Atomic Vecs Part II
+
+z <- vector(mode = "numeric", length = 0)
+print(z)
+# dynamic creation (don't in R, do in Python)
+z <- c(z, 5)
+print(z)
+
+# Predefined Length
+z <- rep(0, 100)
+length(z)
+
+
