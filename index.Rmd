@@ -109,7 +109,7 @@ ___
 
 Student  | GitHub and Portfolio Links | Fun Fact
 ------------- | -------------- | ------------- 
-Sof Antelo | [GitHub]()| My intramural soccer team and I are reigning champs, trying to defend the title this season!
+Sof Antelo | [GitHub](https://sof-antelo.github.io/BIOL6100_ANTELO/)| My intramural soccer team and I are reigning champs, trying to defend the title this season!
 Olukayode Arowosegbe  |[GitHub](https://olukayode999.github.io/Arowosegbe_Homework/)|I love to believe i can sing 
 Elizabeth Bansbach | [GitHub]()|I like to make homemade bread!
 George Ni | [GitHub](https://xgithub.com/georgeni2442) [Portfolio](https://xgeorgeni2442.github.io/TestRepo) | I used to train birds for falconry and science shows.
