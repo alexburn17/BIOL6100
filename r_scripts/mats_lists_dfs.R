@@ -107,7 +107,52 @@ data <- read.csv("data/my_dataframe.csv")
 
 data$var_a
 
+# Distinctions between DFs and Mat Dims
 
+z_mat <- matrix(data = 1:30, ncol = 3, byrow = T)
+
+z_dframe <- as.data.frame(z_mat) # turn into DF
+
+str(z_mat)
+str(z_dframe)
+
+head(z_mat)
+
+z_dframe$V2[2] # correct for a DF
+
+# column ref
+z_dframe[,3]
+z_mat[,3]
+
+# one dimension referencing 
+z_mat[2]
+z_dframe[2]
+
+# missing data in DFs and Mats
+zd <- runif(10)
+zd[c(5,7)] <- NA
+print(zd)
+
+# complete cases
+complete.cases(zd)
+
+# filter for only True
+zd[complete.cases(zd)]
+
+# which positions are missing?
+which(!complete.cases(zd))
+
+# missing data in a matrix
+m <- matrix(1:20, nrow = 5)
+
+# add missing data
+m[1,1] <- NA
+m[5,4] <- NA
+
+m[complete.cases(m),]
+
+# now get complete cases for only certain columns!
+m[complete.cases(m[,c1,2)]),]
 
 
 
