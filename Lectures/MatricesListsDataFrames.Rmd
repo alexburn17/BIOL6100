@@ -314,7 +314,7 @@ str(data_names)
 ## Data curation
 * GitHub repository   
 * Metadata   
-* [Metadata template](https://gotellilab.github.io/Bio381/Scripts/Feb02/ExcelDataTemplate.xlsx)   
+* [Metadata template](ExcelDataTemplate.csv)   
 * Example of Lauren's data 
 
 ## Exporting and importing data

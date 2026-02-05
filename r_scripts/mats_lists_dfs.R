@@ -163,7 +163,7 @@ m[complete.cases(m[,c1,2)]),]
 
 
 
-
+my_data <- read.table(file="data/ExcelDataTemplate.csv", header=TRUE, sep=",", comment.char="#")
 
 
 

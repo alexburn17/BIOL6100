@@ -23,7 +23,7 @@ Welcome to computational biology! This semester, we will be taking a look at the
 
 [Course Syllabus](CourseMaterials/CourseSyllabus.html)   
 
-[R Scripts](Scripts/RScripts.html
+[R Scripts](Scripts/RScripts.html)
 
 [Example Datasets](Datasets/Example_Datasets.html)
 
@@ -48,8 +48,8 @@ February 3  | [Matrices, Lists, Data Frames II](Lectures/MatricesListsDataFrames
 February 4  | **Portfolio Check #1**  | [Homework #4](Homeworks/Homework_05.html)
 February 5  | [Functions I](Lectures/Functions.html) | -
 February 10  | [Functions II](Lectures/Functions.html) | -
-February 11  | -  | [Homework #5](Homeworks/Homework_05.html)
-February 12   | [Functions II](Lectures/Functions.html) | -
+February 11  | -  | [Homework #5](Homeworks/Homework_06.html)
+February 12   | [Control Structures](Lectures/ControlStructures_I.html)| -
 February 17 | [Control Structures](Lectures/ControlStructures_I.html)| -
 
 <!--

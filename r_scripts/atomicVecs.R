@@ -242,3 +242,9 @@ zd[which(zd < 0.5)]
 which(zd < 0.5)
 
 zd[11]
+
+
+
+
+
+
