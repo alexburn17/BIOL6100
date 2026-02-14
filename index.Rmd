@@ -51,14 +51,24 @@ February 10  | [Functions II](Lectures/Functions.html) | -
 February 11  | -  | [Homework #5](Homeworks/BIOL6100_logistic_growth_hw6.html)
 February 12   | [For Loops I](Lectures/ForLoops_I.html)| -
 February 17 | [For Loops II](Lectures/ForLoops_II.html)| -
-February 18  | -  | [Homework # 6](Homeworks/Homework_08.html)
+February 18  | -  | [Homework # 6](Homeworks/BIOL6100_loops_and_SIR_hw6.html)
 February 19 | [Control Structures](Lectures/ControlStructures_I.html)| -
+February 24  |[dplyr/SQL](Lectures/dplyr_Lecture1.html) | - 
+February 25  |  |[Homework #7](Homeworks/Homework_06a.html)
+February 26  | [dplyr+SQL lecture notes](Lectures/dplyr_SQL_Lecture.html) -
+March 3  | Town Meeting Day Recess | -
+March 4  | **Portfolio Check #2** | [For Loops and Randomization](Homeworks/Homework10_S2022.html)
+March 5  | [Functional Programming](Lectures/Functional_Programming.html) | -
+March 10 | Spring Recess | -
+March 11 | Spring Recess | -
+March 12 | Spring Recess | -
+
 
 <!--
 February 18  | -  | [Homework # 6](Homeworks/Homework_08.html)
 February 19 | [For Loops I](Lectures/ForLoops_I.html)| -
 February 24  |[For Loops II](Lectures/ForLoops_II.html) | [(Probability Distributions)](Lectures/ProbabilityDistributions.html)
-February 25  |  | [dplyr/SQL](Lectures/dplyr_Lecture1.html) 
+
 February 26  | [dplyr+SQL lecture notes](Lectures/dplyr_SQL_Lecture.html) | [Homework #7](Homeworks/Homework_06a.html)  | |
 March 3  | Town Meeting Day Recess | -
 March 4  | **Portfolio Check #2** | [Catch-Up Day](Homeworks/???)
