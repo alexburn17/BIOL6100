@@ -48,7 +48,7 @@ February 3  | [Matrices, Lists, Data Frames II](Lectures/MatricesListsDataFrames
 February 4  | **Portfolio Check #1**  | [Homework #4](Homeworks/Homework_05.html)
 February 5  | [Functions I](Lectures/Functions.html) | -
 February 10  | [Functions II](Lectures/Functions.html) | -
-February 11  | -  | [Homework #5](Homeworks/BIOL6100_logistic_growth_hw6.html)
+February 11  | -  | [Homework #5](Homeworks/BIOL6100_logistic_growth_hw5.html)
 February 12   | [For Loops I](Lectures/ForLoops_I.html)| -
 February 17 | [For Loops II](Lectures/ForLoops_II.html)| -
 February 18  | -  | [Homework # 6](Homeworks/BIOL6100_loops_and_SIR_hw6.html)
