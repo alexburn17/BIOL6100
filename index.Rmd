@@ -48,17 +48,27 @@ February 3  | [Matrices, Lists, Data Frames II](Lectures/MatricesListsDataFrames
 February 4  | **Portfolio Check #1**  | [Homework #4](Homeworks/Homework_05.html)
 February 5  | [Functions I](Lectures/Functions.html) | -
 February 10  | [Functions II](Lectures/Functions.html) | -
-February 11  | -  | [Homework #5](Homeworks/BIOL6100_logistic_growth_hw6.html)
+February 11  | -  | [Homework #5](Homeworks/BIOL6100_logistic_growth_hw5.html)
 February 12   | [For Loops I](Lectures/ForLoops_I.html)| -
 February 17 | [For Loops II](Lectures/ForLoops_II.html)| -
-February 18  | -  | [Homework # 6](Homeworks/Homework_08.html)
-February 19 | [Control Structures](Lectures/ControlStructures_I.html)| -
+February 18  | -  | [Homework # 6](Homeworks/BIOL6100_loops_and_SIR_hw6.html)
+February 19 | [ggplot 1](Lectures/ggplot_I.html)| -
+February 24  |[ggplot 2](Lectures/ggplot_II.html) | - 
+February 25  | [dplyr](Lectures/dplyr_Lecture1.html)  |[Homework #7](Homeworks/Homework_06a.html)
+February 26  | [dplyr+SQL lecture notes](Lectures/dplyr_SQL_Lecture.html) 
+March 3  | Town Meeting Day Recess | -
+March 4  | **Portfolio Check #2** | [Homework #8](Homeworks/Homework10_S2022.html)
+March 5  | [Control Structures](Lectures/ControlStructures_I.html) | -
+March 10 | Spring Recess | -
+March 11 | Spring Recess | -
+March 12 | Spring Recess | -
+
 
 <!--
 February 18  | -  | [Homework # 6](Homeworks/Homework_08.html)
 February 19 | [For Loops I](Lectures/ForLoops_I.html)| -
 February 24  |[For Loops II](Lectures/ForLoops_II.html) | [(Probability Distributions)](Lectures/ProbabilityDistributions.html)
-February 25  |  | [dplyr/SQL](Lectures/dplyr_Lecture1.html) 
+
 February 26  | [dplyr+SQL lecture notes](Lectures/dplyr_SQL_Lecture.html) | [Homework #7](Homeworks/Homework_06a.html)  | |
 March 3  | Town Meeting Day Recess | -
 March 4  | **Portfolio Check #2** | [Catch-Up Day](Homeworks/???)
