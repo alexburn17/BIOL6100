@@ -28,4 +28,4 @@ output:
 
     d. Use qplot() to create a histogram of the means for each reshuffled group. Or, if you want a challenge, use ggplot() to overlay all 3 histograms in the same figure. How do the distributions of reshuffled means compare to the original means?   
 
-[Randomization Tests Lecture Notes](https://gotellilab.github.io/Bio381/Lectures/Lecture19_S2021.html)
+[Randomization Tests Lecture Notes](https://gotellilab.github.io/Bio381/Lectures/OlderLectures/Lecture19_S2021.html)
