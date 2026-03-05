@@ -58,7 +58,7 @@ February 25  | [dplyr](Lectures/dplyr_Lecture1.html)  |[Homework #7](Homeworks/H
 February 26  | [dplyr+SQL lecture notes](Lectures/dplyr_SQL_Lecture.html) 
 March 3  | Town Meeting Day Recess | -
 March 4  | **Portfolio Check #2** | [Homework #8](Homeworks/Homework10_S2022.html)
-March 5  | [Control Structures](Lectures/ControlStructures_I.html) | -
+March 5  | [ggplot 2 (colors)](Lectures/ggplot_IV.html) | -
 March 10 | Spring Recess | -
 March 11 | Spring Recess | -
 March 12 | Spring Recess | -
