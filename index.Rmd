@@ -62,6 +62,13 @@ March 5  | [ggplot 2 (colors)](Lectures/ggplot_IV.html) | -
 March 10 | Spring Recess | -
 March 11 | Spring Recess | -
 March 12 | Spring Recess | -
+March 17  | [Into to Python I](Lectures/intro_to_python.html)| -
+March 18  |  |[Homework #8](Homeworks/homework8_ggplot.html)
+March 19  | [Into to Python II](Lectures/intro_to_python.html) | -
+
+
+
+
 
 
 <!--
