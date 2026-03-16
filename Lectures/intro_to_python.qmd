@@ -7,6 +7,8 @@ execute:
   output: false
 ---
 
+First we need the iris dataset for these examples:
+[Download the Iris dataset](https://github.com/alexburn17/BIOL6100/blob/main/Lectures/iris.data.csv)
 
 ```{python}
 # INTRO TO PYTHON
