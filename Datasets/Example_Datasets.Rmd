@@ -20,7 +20,7 @@ Here are some links to example data sets for you to peruse and apply to your hom
 Name | Download | Description
 ------------- | -------------- | ------------- 
 Bombus (Bumblebee) Seasonal Variation | [Download](Burnham_field_data_bombus_seasonal_variation_Dataset.csv)| We collected samples to assay viruses (DWV and BQCV) and Nosema from around 300 bumblebees of various species from 5 sites at 4 different time points
-Expression analysis of Danio rerio semaphorin6a and plexinA2 morpholino-injected embryos | [Download_1](Ebert_dataset.xlsx) [Download_2](Ebert_read.R) | Metadata is in File 1, File 2 has a script file that pulls in the dataset. 
+Expression analysis of Danio rerio semaphorin6a and plexinA2 morpholino-injected embryos | [Download_1](Ebert_Dataset.xlsx) [Download_2](Ebert_Read.R) | Metadata is in File 1, File 2 has a script file that pulls in the dataset. 
 Plecoptera Counts| [Download](Hogan_Plecoptera_Dataset.xlsx)|Counts of stonefiles (Plecoptera) from museum collections and field collections.
 Effects of plant diversity on resistance of plant biomass|[Download](Li_Soil_Dataset.xlsx)|Plant dataset analyzing the effect of plant species on various soil conditions (moisture, organic matter, etc). 
 
