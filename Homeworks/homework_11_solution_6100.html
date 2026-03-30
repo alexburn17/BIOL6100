@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Homework 11</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="homework_11_solution_6100_files/libs/clipboard/clipboard.min.js"></script>
+<script src="homework_11_solution_6100_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="homework_11_solution_6100_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="homework_11_solution_6100_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="homework_11_solution_6100_files/libs/quarto-html/popper.min.js"></script>
+<script src="homework_11_solution_6100_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="homework_11_solution_6100_files/libs/quarto-html/anchor.min.js"></script>
+<link href="homework_11_solution_6100_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="homework_11_solution_6100_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="homework_11_solution_6100_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="homework_11_solution_6100_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="homework_11_solution_6100_files/libs/bootstrap/bootstrap-d6a003b94517c951b2d65075d42fb01b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Homework 11</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="structured-programming" class="level1">
+<h1>Structured Programming</h1>
+<hr>
+<section id="cleanly-re-coding-a-ca-sir-model-using-functional-programming" class="level3">
+<h3 class="anchored" data-anchor-id="cleanly-re-coding-a-ca-sir-model-using-functional-programming">Cleanly Re-Coding a CA SIR Model using Functional Programming</h3>
+<section id="p.-alexander-burnham" class="level4">
+<h4 class="anchored" data-anchor-id="p.-alexander-burnham">P. Alexander Burnham</h4>
+</section>
+<section id="march-2026" class="level4">
+<h4 class="anchored" data-anchor-id="march-2026">20 March 2026</h4>
+<hr>
+</section>
+</section>
+</section>
+<section id="objective" class="level1">
+<h1>Objective:</h1>
+<hr>
+<p>Here we will use structured programming to code up Cellular Automata Model for the SIR Model using a driver script and helper functions in a properly structured repository. This kind of structure is necessary as projects increase in complexity and code bases correspondingly increase in size.</p>
+<section id="the-assignment" class="level2">
+<h2 class="anchored" data-anchor-id="the-assignment">The Assignment:</h2>
+<p>At the end of this assignemnt, you will have created a new properly structured repository and using the code and information below, seperated the functions into seperate files stored in a <code>functions</code> folder, which can be sourced from a driver script in a .qmd python code chunk.</p>
+<p>Your output of this assignment to be posted on your github page will be a single .html file.</p>
+<section id="set-up-a-new-github-repository-named-ca_sir_6100." class="level3">
+<h3 class="anchored" data-anchor-id="set-up-a-new-github-repository-named-ca_sir_6100.">1: Set up a new github repository named <code>CA_SIR_6100</code>.</h3>
+<p>Format the repository to include your driver .qmd file, and a folder named <code>functions</code>. A diagram for a well structured repo can be found below.</p>
+<p><em>NOTE: For this homework, many of the items in this example repository are not neccessary and are listed for future reference. In a large project, these are the kinds of folders and directories that will often be needed. For this code to run, the driver .qmd file and the functions folder (containing our function.py files) will be all that are required.</em></p>
+<ul>
+<li><strong>Root Folder (Name of Repository)</strong>
+<ul>
+<li>driver.py</li>
+<li>readme.txt</li>
+<li>.gitignore</li>
+<li>license.txt</li>
+<li>data (folder):
+<ul>
+<li>data1.csv</li>
+<li>data2.tif</li>
+<li>data3.txt</li>
+</ul></li>
+<li>functions (folder):
+<ul>
+<li>function_1.py</li>
+<li>function_2.py</li>
+<li>function_3.py</li>
+</ul></li>
+<li>figures (folder):
+<ul>
+<li>figure_1.pdf</li>
+<li>figure_2.pdf</li>
+</ul></li>
+<li>documents (folder):
+<ul>
+<li>manuscript_draft_1.md</li>
+<li>grant_proposal.docx</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="create-your-function.py-files." class="level3">
+<h3 class="anchored" data-anchor-id="create-your-function.py-files.">2: Create your function.py files.</h3>
+<p>Under the section below entitled “Functions for SIR Model”, are four code chunks. Create a new python file for each. File names are suggested above each code chunk. Put all four python files into your <code>functions</code> folder.</p>
+</section>
+<section id="create-your-rough-.qmd-driver-script." class="level3">
+<h3 class="anchored" data-anchor-id="create-your-rough-.qmd-driver-script.">3: Create your rough .qmd driver script.</h3>
+<p>Create a .qmd file in the root of your repository entitled <code>ca_sir_driver</code>. Change the title in your YAML to “Homework 11: Structured Programming and CA Models”. <strong>1:</strong> Create a section where you describe your repository structure and provide a link to your new github repository. <strong>2:</strong> Create a second section that includes a python code chunk. Paste the driver code inside this chunk. The driver code is near the bottom of this document under the header, “Driver Script”. As a reminder, a python code chunk begins with: <code>```{python}</code> and ends with <code>```</code></p>
+</section>
+<section id="source-your-four-helper-functions-located-in-the-functions-folder" class="level3">
+<h3 class="anchored" data-anchor-id="source-your-four-helper-functions-located-in-the-functions-folder">4: Source your four helper functions located in the functions folder</h3>
+<p>Source your functions from the driver directly after our python libraries are sourced. Sourcing a function within a folder named <code>functions</code> takes the form found below…</p>
+<pre><code># NOTE: file extensions are not required in the code below
+from functions.filename import function_name</code></pre>
+<p>Once all four functions are sourced in this manner, move onto step 5.</p>
+</section>
+<section id="run-your-code-by-rendering-the-.qmd-file-as-an-.html-file." class="level3">
+<h3 class="anchored" data-anchor-id="run-your-code-by-rendering-the-.qmd-file-as-an-.html-file.">5: Run your code by rendering the .qmd file as an .html file.</h3>
+<p>Render your .html file. This will bring up your interactive SIR grid. Initialize your infected cells by clicking on them and hit the spacebar to watch the simulation. The space bar will also pause the simulation. While paused, the S key will step through the simulation frame by frame. Changing <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\gamma\)</span> in the driver script will affect the speed and spread of the infection. Once the simulation has reached a steady state, the ESC key will end the simulation and finish the rendering of the .html file. A figure plotting the curves of <span class="math inline">\(S\)</span>, <span class="math inline">\(I\)</span> and <span class="math inline">\(R\)</span> should be included as an output in your rendered file automatically. Your pygame may still be open with a spinning wheel (inactive). This will restart if you rerun the simulation and close when you quit Positron.</p>
+</section>
+</section>
+</section>
+<section id="how-this-sir-model-works" class="level1">
+<h1>How This SIR Model Works:</h1>
+<hr>
+<p><strong>Agent-Based SIR Model Using Cellular Automata</strong></p>
+<p>This simulation implements an agent-based SIR (Susceptible-Infected-Recovered) model on a 2D grid, similar to a cellular automaton (CA). Each grid cell represents an individual in one of three states:</p>
+<ul>
+<li><strong>Susceptible (S):</strong> Healthy, can become infected.</li>
+<li><strong>Infected (I):</strong> Currently infectious, can transmit disease to neighbors.</li>
+<li><strong>Recovered (R):</strong> Immune and no longer infectious.</li>
+</ul>
+<p><strong>Neighborhood:</strong> Each cell interacts with its 8 surrounding neighbors (Moore neighborhood). The number of infected neighbors determines the probability of a susceptible cell becoming infected.</p>
+<p><strong>Rules and Probabilities:</strong></p>
+<ul>
+<li><em>Infection:</em> A susceptible cell becomes infected with probability<br>
+<code>1 - (1 - β)^n</code>, where <code>β</code> is the infection probability per neighbor, and <code>n</code> is the number of infected neighbors.</li>
+<li><em>Recovery:</em> An infected cell recovers with probability <code>γ</code> per time step.</li>
+</ul>
+<p><strong>User Interaction:</strong></p>
+<ul>
+<li>Left click → infect a susceptible cell.<br>
+</li>
+<li>Right click → make a cell recovered.<br>
+</li>
+<li>Spacebar → toggle automatic simulation.<br>
+</li>
+<li>S key → single-step the simulation.<br>
+</li>
+<li>C key → reset the grid.</li>
+</ul>
+<p>Over time, the simulation tracks the proportion of S, I, and R individuals and plots their dynamics, illustrating epidemic spread patterns.</p>
+</section>
+<section id="functions-for-sir-model" class="level1">
+<h1>Functions for SIR Model:</h1>
+<hr>
+<section id="function-1-init_grid" class="level2">
+<h2 class="anchored" data-anchor-id="function-1-init_grid">Function 1: <code>init_grid()</code></h2>
+<p>This function is stored in a file called <code>init.py</code>.</p>
+<div id="7383a5a9" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> init_grid(dimx, dimy):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># PURPOSE: Initialize an empty grid to run simulation on.</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># INPUTS:</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="co"># dimx: length of x dimension</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="co"># dimy: length of y dimension</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># OUTPUTS: An empty array of dimx x dimy</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># SIDE EFFECTS: None</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># import required libraries</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> numpy <span class="im">as</span> np </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.zeros((dimy, dimx), dtype<span class="op">=</span><span class="bu">int</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="function-2-draw" class="level2">
+<h2 class="anchored" data-anchor-id="function-2-draw">Function 2: <code>draw()</code></h2>
+<p>This function is stored in a file called <code>draw.py</code>.</p>
+<div id="4085a47a" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw(surface, grid, cellsize, S, I, R, col_S, col_I, col_R):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># PURPOSE: Draw interactive pygame lattice</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># INPUTS: Inputs to pass to other helper functions:</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="co"># surface: Surface that pygame draws the simulation on.</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="co"># grid: Array that simulation is being conducted on </span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="co"># cellsize: size of cells</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="co"># S, I, R: numeric states for each class (S = 0, I = 1, R = 2)</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="co"># col_S, col_I, col_R: hex codes for the colors of the states</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># OUTPUTS: None</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># SIDE EFFECTS: Interactive SIR grid with keyboard commands.</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Mouse: activate infected cells on grid</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Spacebar: play and pause simmulation (default = pause)</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># S-Key: progress through simulation step-by-step while paused</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Esc: stop simulation and return SIR curves as a figure</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># required libraries</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> pygame</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> state <span class="kw">in</span> [S, I, R]:</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        rows, cols <span class="op">=</span> np.where(grid <span class="op">==</span> state)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> state <span class="op">==</span> S:</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>            color <span class="op">=</span> col_S</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> state <span class="op">==</span> I:</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>            color <span class="op">=</span> col_I</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>            color <span class="op">=</span> col_R</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> r, c <span class="kw">in</span> <span class="bu">zip</span>(rows, cols):</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>            pygame.draw.rect(</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>                surface,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>                color,</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>                (c <span class="op">*</span> cellsize, r <span class="op">*</span> cellsize, cellsize <span class="op">-</span> <span class="dv">1</span>, cellsize <span class="op">-</span> <span class="dv">1</span>),</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>            )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="function-3-update_sir" class="level2">
+<h2 class="anchored" data-anchor-id="function-3-update_sir">Function 3: <code>update_sir()</code></h2>
+<p>This function is stored in a file called <code>update.py</code>.</p>
+<div id="b322c7db" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> update_sir(grid, beta, gamma, S, I, R):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># PURPOSE: Update the grid each time step based on rules</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># INPUTS: </span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="co"># grid: previous grid</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        <span class="co"># beta: transmission rate</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="co"># gamma: recovery rate</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        <span class="co"># S, I, R: numeric states for each class (S = 0, I = 1, R = 2)</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># OUTPUTS: New updated grid as a np array.</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># SIDE EFFECTS: None</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> numpy <span class="im">as</span> np <span class="co"># required libary</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    infected_neighbors <span class="op">=</span> (</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        np.roll(np.roll(grid <span class="op">==</span> I, <span class="dv">1</span>, <span class="dv">0</span>), <span class="dv">1</span>, <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        np.roll(np.roll(grid <span class="op">==</span> I, <span class="dv">1</span>, <span class="dv">0</span>), <span class="dv">0</span>, <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        np.roll(np.roll(grid <span class="op">==</span> I, <span class="dv">1</span>, <span class="dv">0</span>), <span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        np.roll(np.roll(grid <span class="op">==</span> I, <span class="dv">0</span>, <span class="dv">0</span>), <span class="dv">1</span>, <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        np.roll(np.roll(grid <span class="op">==</span> I, <span class="dv">0</span>, <span class="dv">0</span>), <span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>        np.roll(np.roll(grid <span class="op">==</span> I, <span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>), <span class="dv">1</span>, <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>        np.roll(np.roll(grid <span class="op">==</span> I, <span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>), <span class="dv">0</span>, <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>        np.roll(np.roll(grid <span class="op">==</span> I, <span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>), <span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    new_grid <span class="op">=</span> grid.copy()</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    infect_prob <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> (<span class="dv">1</span> <span class="op">-</span> beta) <span class="op">**</span> infected_neighbors</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    rand <span class="op">=</span> np.random.rand(<span class="op">*</span>grid.shape)</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    new_grid[(grid <span class="op">==</span> S) <span class="op">&amp;</span> (rand <span class="op">&lt;</span> infect_prob)] <span class="op">=</span> I</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    recover <span class="op">=</span> (grid <span class="op">==</span> I) <span class="op">&amp;</span> (np.random.rand(<span class="op">*</span>grid.shape) <span class="op">&lt;</span> gamma)</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    new_grid[recover] <span class="op">=</span> R</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> new_grid</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="function-4-mouse_to_cell" class="level2">
+<h2 class="anchored" data-anchor-id="function-4-mouse_to_cell">Function 4: <code>mouse_to_cell()</code></h2>
+<p>This function is stored in a file called <code>mouse.py</code>.</p>
+<div id="ca3623c9" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mouse_to_cell(pos, cellsize):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># PURPOSE: Use mouse to indicate cell position in grid</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># INPUTS: </span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="co"># pos: position of mouse</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        <span class="co"># cellsize: size of cell on pydata interactive grid</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># OUTPUTS: Returns the cell that was activated by the mouse</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># SIDE EFFECTS: None</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    x, y <span class="op">=</span> pos</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> y <span class="op">//</span> cellsize, x <span class="op">//</span> cellsize</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="driver-script" class="level1">
+<h1>Driver Script:</h1>
+<hr>
+<div id="a3c30044" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run an agent-based SIR model</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># P. Alexander Burnham</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 25 March, 2026</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># import libraries</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pygame</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># import functions here....</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co"># States</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>S <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>I <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>R <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Colors</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>col_S <span class="op">=</span> (<span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">255</span>)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>col_I <span class="op">=</span> (<span class="dv">255</span>, <span class="dv">50</span>, <span class="dv">50</span>)</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>col_R <span class="op">=</span> (<span class="dv">50</span>, <span class="dv">255</span>, <span class="dv">50</span>)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>col_grid <span class="op">=</span> (<span class="dv">30</span>, <span class="dv">30</span>, <span class="dv">60</span>)</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Params</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>beta <span class="op">=</span> <span class="fl">0.05</span>   <span class="co"># infection probability</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>gamma <span class="op">=</span> <span class="fl">0.05</span> <span class="co"># recovery probability</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="co">########################################################################################################################</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Begin Program Body</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a><span class="co">########################################################################################################################</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a><span class="co">########################################################################################################################</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="re">BEGIN</span><span class="co"> FUNCTION</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> main(dimx, dimy, cellsize, S <span class="op">=</span> S, I <span class="op">=</span> I, R <span class="op">=</span> R, beta <span class="op">=</span> beta, gamma <span class="op">=</span> gamma, col_S <span class="op">=</span> col_S, col_I <span class="op">=</span> col_I, col_R <span class="op">=</span> col_R, col_grid <span class="op">=</span> col_grid):</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># PURPOSE: Run all helper functions, control keyboard commands and plot SIR curves.</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>    <span class="co"># INPUTS: Inputs to pass to other helper functions:</span></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>        <span class="co"># dimx: number of cells in x dimension</span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>        <span class="co"># dimy: number of cells in y dimension</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>        <span class="co"># cellsize: size of cells</span></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>        <span class="co"># S, I, R: numeric states for each class (S = 0, I = 1, R = 2)</span></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>        <span class="co"># col_S, col_I, col_R, col_grid: hex codes for the colors of the states and the empty grid</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># OUTPUTS: None</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># SIDE EFFECTS: Interactive SIR grid with keyboard commands and SIR plot at simulation end.</span></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Mouse: activate infected cells on grid</span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Spacebar: play and pause simmulation (default = pause)</span></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>        <span class="co"># S-Key: progress through simulation step-by-step while paused</span></span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Esc: stop simulation and return SIR curves as a figure</span></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>    pygame.init()</span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>    surface <span class="op">=</span> pygame.display.set_mode((dimx <span class="op">*</span> cellsize, dimy <span class="op">*</span> cellsize))</span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>    pygame.display.set_caption(<span class="st">"Agent-Based SIR Model"</span>)</span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>    clock <span class="op">=</span> pygame.time.Clock()</span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a>    grid <span class="op">=</span> init_grid(dimx, dimy)</span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a>    running <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>    step <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a>    done <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a>    <span class="co"># --- epidemic history ---</span></span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a>    S_hist <span class="op">=</span> []</span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a>    I_hist <span class="op">=</span> []</span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a>    R_hist <span class="op">=</span> []</span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="kw">not</span> done:</span>
+<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-73"><a href="#cb6-73" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> event <span class="kw">in</span> pygame.event.get():</span>
+<span id="cb6-74"><a href="#cb6-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-75"><a href="#cb6-75" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> event.<span class="bu">type</span> <span class="op">==</span> pygame.QUIT:</span>
+<span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a>                done <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb6-77"><a href="#cb6-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-78"><a href="#cb6-78" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> event.<span class="bu">type</span> <span class="op">==</span> pygame.KEYDOWN:</span>
+<span id="cb6-79"><a href="#cb6-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-80"><a href="#cb6-80" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> event.key <span class="op">==</span> pygame.K_ESCAPE:</span>
+<span id="cb6-81"><a href="#cb6-81" aria-hidden="true" tabindex="-1"></a>                    done <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb6-82"><a href="#cb6-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-83"><a href="#cb6-83" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> event.key <span class="op">==</span> pygame.K_SPACE:</span>
+<span id="cb6-84"><a href="#cb6-84" aria-hidden="true" tabindex="-1"></a>                    running <span class="op">=</span> <span class="kw">not</span> running</span>
+<span id="cb6-85"><a href="#cb6-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-86"><a href="#cb6-86" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> event.key <span class="op">==</span> pygame.K_s:</span>
+<span id="cb6-87"><a href="#cb6-87" aria-hidden="true" tabindex="-1"></a>                    step <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb6-88"><a href="#cb6-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-89"><a href="#cb6-89" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> event.key <span class="op">==</span> pygame.K_c:</span>
+<span id="cb6-90"><a href="#cb6-90" aria-hidden="true" tabindex="-1"></a>                    grid <span class="op">=</span> init_grid(dimx, dimy)</span>
+<span id="cb6-91"><a href="#cb6-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-92"><a href="#cb6-92" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> event.<span class="bu">type</span> <span class="op">==</span> pygame.MOUSEBUTTONDOWN:</span>
+<span id="cb6-93"><a href="#cb6-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-94"><a href="#cb6-94" aria-hidden="true" tabindex="-1"></a>                row, col <span class="op">=</span> mouse_to_cell(event.pos, cellsize)</span>
+<span id="cb6-95"><a href="#cb6-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-96"><a href="#cb6-96" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> event.button <span class="op">==</span> <span class="dv">1</span>:   <span class="co"># left click → infect</span></span>
+<span id="cb6-97"><a href="#cb6-97" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span> grid[row, col] <span class="op">==</span> S:</span>
+<span id="cb6-98"><a href="#cb6-98" aria-hidden="true" tabindex="-1"></a>                        grid[row, col] <span class="op">=</span> I</span>
+<span id="cb6-99"><a href="#cb6-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-100"><a href="#cb6-100" aria-hidden="true" tabindex="-1"></a>                <span class="cf">elif</span> event.button <span class="op">==</span> <span class="dv">3</span>: <span class="co"># right click → recover</span></span>
+<span id="cb6-101"><a href="#cb6-101" aria-hidden="true" tabindex="-1"></a>                    grid[row, col] <span class="op">=</span> R</span>
+<span id="cb6-102"><a href="#cb6-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-103"><a href="#cb6-103" aria-hidden="true" tabindex="-1"></a>        surface.fill(col_grid)</span>
+<span id="cb6-104"><a href="#cb6-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-105"><a href="#cb6-105" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> running <span class="kw">or</span> step:</span>
+<span id="cb6-106"><a href="#cb6-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-107"><a href="#cb6-107" aria-hidden="true" tabindex="-1"></a>            grid <span class="op">=</span> update_sir(grid, beta, gamma, S <span class="op">=</span> S, I <span class="op">=</span> I, R <span class="op">=</span> R)</span>
+<span id="cb6-108"><a href="#cb6-108" aria-hidden="true" tabindex="-1"></a>            step <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb6-109"><a href="#cb6-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-110"><a href="#cb6-110" aria-hidden="true" tabindex="-1"></a>            total <span class="op">=</span> grid.size</span>
+<span id="cb6-111"><a href="#cb6-111" aria-hidden="true" tabindex="-1"></a>            S_hist.append(np.<span class="bu">sum</span>(grid <span class="op">==</span> S) <span class="op">/</span> total)</span>
+<span id="cb6-112"><a href="#cb6-112" aria-hidden="true" tabindex="-1"></a>            I_hist.append(np.<span class="bu">sum</span>(grid <span class="op">==</span> I) <span class="op">/</span> total)</span>
+<span id="cb6-113"><a href="#cb6-113" aria-hidden="true" tabindex="-1"></a>            R_hist.append(np.<span class="bu">sum</span>(grid <span class="op">==</span> R) <span class="op">/</span> total)</span>
+<span id="cb6-114"><a href="#cb6-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-115"><a href="#cb6-115" aria-hidden="true" tabindex="-1"></a>        draw(surface, grid, cellsize, S<span class="op">=</span>S, I<span class="op">=</span>I, R<span class="op">=</span>R, col_S<span class="op">=</span>col_S, col_I<span class="op">=</span>col_I, col_R<span class="op">=</span>col_R)</span>
+<span id="cb6-116"><a href="#cb6-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-117"><a href="#cb6-117" aria-hidden="true" tabindex="-1"></a>        pygame.display.update()</span>
+<span id="cb6-118"><a href="#cb6-118" aria-hidden="true" tabindex="-1"></a>        clock.tick(<span class="dv">20</span>)</span>
+<span id="cb6-119"><a href="#cb6-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-120"><a href="#cb6-120" aria-hidden="true" tabindex="-1"></a>    pygame.quit()</span>
+<span id="cb6-121"><a href="#cb6-121" aria-hidden="true" tabindex="-1"></a>    pygame.display.quit()</span>
+<span id="cb6-122"><a href="#cb6-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-123"><a href="#cb6-123" aria-hidden="true" tabindex="-1"></a>    <span class="co"># --- Plot epidemic curves ---</span></span>
+<span id="cb6-124"><a href="#cb6-124" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> <span class="bu">range</span>(<span class="bu">len</span>(S_hist))</span>
+<span id="cb6-125"><a href="#cb6-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-126"><a href="#cb6-126" aria-hidden="true" tabindex="-1"></a>    plt.figure()</span>
+<span id="cb6-127"><a href="#cb6-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-128"><a href="#cb6-128" aria-hidden="true" tabindex="-1"></a>    plt.plot(t, S_hist, color<span class="op">=</span>np.array(col_S)<span class="op">/</span><span class="dv">255</span>, label<span class="op">=</span><span class="st">"Susceptible"</span>)</span>
+<span id="cb6-129"><a href="#cb6-129" aria-hidden="true" tabindex="-1"></a>    plt.plot(t, I_hist, color<span class="op">=</span>np.array(col_I)<span class="op">/</span><span class="dv">255</span>, label<span class="op">=</span><span class="st">"Infected"</span>)</span>
+<span id="cb6-130"><a href="#cb6-130" aria-hidden="true" tabindex="-1"></a>    plt.plot(t, R_hist, color<span class="op">=</span>np.array(col_R)<span class="op">/</span><span class="dv">255</span>, label<span class="op">=</span><span class="st">"Recovered"</span>)</span>
+<span id="cb6-131"><a href="#cb6-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-132"><a href="#cb6-132" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">"Time Step"</span>)</span>
+<span id="cb6-133"><a href="#cb6-133" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">"Proportion of Population"</span>)</span>
+<span id="cb6-134"><a href="#cb6-134" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">"Agent-Based SIR Dynamics"</span>)</span>
+<span id="cb6-135"><a href="#cb6-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-136"><a href="#cb6-136" aria-hidden="true" tabindex="-1"></a>    plt.legend()</span>
+<span id="cb6-137"><a href="#cb6-137" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb6-138"><a href="#cb6-138" aria-hidden="true" tabindex="-1"></a><span class="co">############################################################################################################</span></span>
+<span id="cb6-139"><a href="#cb6-139" aria-hidden="true" tabindex="-1"></a><span class="co"># FUNCTION </span><span class="re">END</span></span>
+<span id="cb6-140"><a href="#cb6-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-141"><a href="#cb6-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-142"><a href="#cb6-142" aria-hidden="true" tabindex="-1"></a><span class="co"># run main function here...</span></span>
+<span id="cb6-143"><a href="#cb6-143" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb6-144"><a href="#cb6-144" aria-hidden="true" tabindex="-1"></a>    main(<span class="dv">100</span>, <span class="dv">70</span>, <span class="dv">8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="homework_11_solution_6100_files/figure-html/cell-6-output-1.png" width="589" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
