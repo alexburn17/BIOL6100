@@ -68,10 +68,13 @@ March 19  | [Intro to Python II](Lectures/intro_to_python.html) | -
 March 24 | [Intro to Python III](Lectures/intro_to_python.html) | -
 March 25  | - | [Homework #10](Homeworks/BIOL6100_pythonHW.html)
 March 26  | [Intro to Python IV](Lectures/intro_to_python.html) | -
+March 31  | [Structured Programming](Lectures/ggplot_II.html)  | -
+April 1  | - | [Homework #11](Homeworks/BIOL6100_pythonHW.html)
+April 2  | [Spatiotemporal Data in spacetime](Lectures/ggplot_III.html) | -
 
 
 
-
+game_of_life_lecture_notes.html
 
 <!--
 February 18  | -  | [Homework # 6](Homeworks/Homework_08.html)
