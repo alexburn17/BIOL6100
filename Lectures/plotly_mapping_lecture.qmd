@@ -1,0 +1,317 @@
+---
+title: "Biology 6100: Mapping with Plotly Express"
+subtitle: "Choropleths and density maps"
+author: "P. Alexander Burnham"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 2
+    code-fold: false
+    code-summary: "Show code"
+execute:
+  echo: true
+  warning: false
+  message: false
+  error: false
+jupyter: python3
+---
+
+## Learning goals
+
+- distinguish **outline-based** maps from **tile-based** maps in Plotly
+- make a basic **choropleth**
+- restyle a choropleth with better labels, color scales, and map settings
+- make a **density heat map** from latitude/longitude points
+
+## Notes for class
+
+A current Plotly distinction worth emphasizing is this:
+
+- **Outline maps** use functions such as `px.choropleth()` and draw geographic boundaries directly.
+- **Tile maps** use functions such as `px.scatter_map()`, `px.choropleth_map()`, and `px.density_map()` and sit on top of a map tile background.
+
+Recent Plotly versions emphasize the newer `*_map` functions built on **MapLibre**, rather than older `*_mapbox` functions. Plotly documents this split between outline maps and tile maps, and notes the newer MapLibre-based mapping direction.
+
+
+
+## Setup
+
+```{python}
+import json
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+```
+
+
+## 1. First idea: choropleth maps with color polygons
+
+Plotly's choropleth maps color regions based on a variable. In the newer tile-map API, each row corresponds to a colored region, and the matching between data and polygons is controlled by `locations`, `geojson`, and often `featureidkey`.
+
+We will start with a built-in dataset called gapminder.
+
+```{python}
+gap = px.data.gapminder().query("year == 2007")
+gap.head()
+```
+
+### A minimal world choropleth
+
+```{python}
+fig = px.choropleth(
+    gap,
+    locations="iso_alpha",
+    color="lifeExp",
+    hover_name="country"
+)
+fig.show()
+```
+
+### Add a title and a better color scale
+
+```{python}
+fig = px.choropleth(
+    gap,
+    locations="iso_alpha",
+    color="lifeExp",
+    hover_name="country",
+    color_continuous_scale="Viridis",
+    title="Life expectancy by country (2007)"
+)
+fig.show()
+```
+
+### Tighten the framing and improve labels
+
+```{python}
+fig.update_layout(
+    coloraxis_colorbar_title="Years",
+    margin=dict(l=0, r=0, t=50, b=0)
+)
+fig.show()
+```
+
+### Change what appears when hovering
+
+```{python}
+fig = px.choropleth(
+    gap,
+    locations="iso_alpha",
+    color="gdpPercap",
+    hover_name="country",
+    hover_data={
+        "lifeExp": ":.1f",
+        "pop": ":,",
+        "gdpPercap": ":,.0f",
+        "iso_alpha": False
+    },
+    color_continuous_scale="Plasma",
+    title="GDP per capita by country (2007)"
+)
+fig.show()
+```
+
+## 2. Map styling on outline maps
+
+Outline maps are controlled through `layout.geo`, which means we can style coastlines, borders, land, lakes, projection, and geographic extent. Plotly's geo-map configuration docs describe these options through `layout.geo`. 
+
+### Remove the default frame and coastlines for a cleaner look
+
+```{python}
+fig.update_geos(
+    showframe=False,
+    showcoastlines=False
+)
+fig.show()
+```
+
+### Focus on one region
+
+```{python}
+americas = gap.query("continent == 'Americas'")
+
+fig = px.choropleth(
+    americas,
+    locations="iso_alpha",
+    color="lifeExp",
+    hover_name="country",
+    color_continuous_scale="Tealgrn",
+    title="Life expectancy in the Americas (2007)"
+)
+
+fig.update_geos(
+    scope="north america",
+    showland=True,
+    landcolor="rgb(240,240,240)"
+)
+
+fig.show()
+```
+
+### Try a different projection
+
+```{python}
+fig.update_geos(projection_type="natural earth")
+fig.show()
+```
+
+You can also try:
+
+```{python}
+# fig.update_geos(projection_type="orthographic")
+# fig.update_geos(projection_type="mercator")
+```
+
+## 3. Tile-based choropleths
+
+Tile maps are different from outline maps. Plotly's tile-map docs note that functions such as `px.choropleth_map()` are tile-based and use `layout.map` instead of `layout.geo`. The newer `*_map` functions are the current direction, while `*_mapbox` traces are deprecated. 
+
+A tile-based choropleth needs polygon geometry such as GeoJSON.
+
+### Read a county GeoJSON file and matching data
+
+```{python}
+from urllib.request import urlopen
+
+with urlopen("https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json") as response:
+    county_geojson = json.load(response)
+
+county_df = pd.read_csv(
+    "https://raw.githubusercontent.com/plotly/datasets/master/fips-unemp-16.csv",
+    dtype={"fips": str}
+)
+
+county_df.head()
+```
+
+### Build a county choropleth on map tiles
+
+```{python}
+fig = px.choropleth_map(
+    county_df,
+    geojson=county_geojson,
+    locations="fips",
+    featureidkey="id",
+    color="unemp",
+    color_continuous_scale="Viridis",
+    zoom=3,
+    center={"lat": 37.8, "lon": -96},
+    map_style="carto-positron",
+    opacity=0.7,
+    title="US county unemployment"
+)
+fig.show()
+```
+
+### Modify the tile style and zoom
+
+```{python}
+fig.update_layout(
+    map_style="open-street-map",
+    margin=dict(l=0, r=0, t=50, b=0)
+)
+fig.show()
+```
+
+### Improve the polygon borders
+
+```{python}
+fig.update_traces(marker_line_width=0.2)
+fig.show()
+```
+
+### Try another style
+
+```{python}
+fig.update_layout(map_style="carto-darkmatter")
+fig.show()
+```
+
+Some good styles to demo live:
+
+```{python}
+# fig.update_layout(map_style="carto-positron")
+# fig.update_layout(map_style="open-street-map")
+# fig.update_layout(map_style="carto-darkmatter")
+# fig.update_layout(map_style="white-bg")
+```
+
+## 4. Density heat maps from point coordinates
+
+Plotly's `px.density_map()` creates a smoothed intensity surface from latitude and longitude points. Plotly documents this as a tile-based density map in which each row contributes to the local intensity. 
+
+### Load earthquake point data
+
+```{python}
+eq = pd.read_csv(
+    "https://raw.githubusercontent.com/plotly/datasets/master/earthquakes-23k.csv"
+)
+eq.head()
+```
+
+### Minimal density map
+
+```{python}
+fig = px.density_map(
+    eq,
+    lat="Latitude",
+    lon="Longitude",
+    z="Magnitude",
+    radius=10,
+    zoom=0,
+    center={"lat": 0, "lon": 180},
+    map_style="open-street-map",
+    title="Global earthquake density"
+)
+fig.show()
+```
+
+### Increase the smoothing radius
+
+```{python}
+fig = px.density_map(
+    eq,
+    lat="Latitude",
+    lon="Longitude",
+    z="Magnitude",
+    radius=20,
+    zoom=0,
+    center={"lat": 0, "lon": 180},
+    map_style="carto-positron",
+    title="Global earthquake density (larger radius)"
+)
+fig.show()
+```
+
+### Change the colors and opacity
+
+```{python}
+fig.update_traces(opacity=0.8)
+fig.update_layout(coloraxis_colorbar_title="Magnitude")
+fig.show()
+```
+
+### Focus on a region
+
+```{python}
+pacific = eq.query("Latitude > -60 and Latitude < 60 and Longitude > 100")
+
+fig = px.density_map(
+    pacific,
+    lat="Latitude",
+    lon="Longitude",
+    z="Magnitude",
+    radius=12,
+    zoom=2,
+    center={"lat": 10, "lon": 160},
+    map_style="carto-darkmatter",
+    title="Earthquake density in the Pacific"
+)
+fig.show()
+```
+
+
+## References
+
+This lecture structure follows current Plotly documentation for Plotly Express, choropleths, density maps, tile maps, geo-map configuration, and the MapLibre migration notes. https://plotly.com/python/choropleth-maps/
