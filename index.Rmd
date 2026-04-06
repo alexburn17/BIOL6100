@@ -71,7 +71,9 @@ March 26  | [Intro to Python IV](Lectures/intro_to_python.html) | -
 March 31  | [Structured Programming](Lectures/game_of_life_lecture_notes.html)  | -
 April 1  | - | [Homework #11](Homeworks/homework_11_solution_6100.html)
 April 2  | [Spatiotemporal Data in Spacetime](https://alexburn17.github.io/Theme3_LabNotebook/) | -
-
+April 7  | [Making Maps I](Lectures/plotly_mapping_lecture.html)  | -
+April 8  | **Portfolio Check #3** | [Homework #12](Homeworks/plotly_mapping_homework_v2.html)
+April 9  | [Making Maps II](Lectures/plotly_mapping_lecture.html) | -
 
 
 <!--
