@@ -1,0 +1,439 @@
+---
+title: "GLMs, GLMMs, and Choosing a Distribution"
+author: "P. Alexander Burnham"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    theme: cosmo
+    code-fold: false
+execute:
+  echo: true
+  warning: false
+  message: false
+editor: visual
+---
+
+# Overview
+
+This lecture uses the **Bumble Bee Disease Seasonal Variation dataset** and is organized into five core topics:
+
+1.  **Model structure for the four main `y ~ x` data-type combinations**
+2.  **Testing for significance**
+3.  **Distributions and log-transformation**
+4.  **Random effects and nesting**
+5.  **Interaction effects**
+
+The response variable should usually drive the choice of model family. In this dataset we can use:
+
+-   **BQCV, DWV and Nosema** prevalence as a binary response
+-   **BQCV, DWV and Nosema load** as a continuous response,
+-   **Bee Species, Host Plant, and Bee Cast** as categorical predictors
+-   and **Sampling Event** as a time-like predictor.
+-   **Site Code** as random effects
+
+# Load packages and import data
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(lme4)
+library(car)
+```
+
+```{r}
+bee_dat <- read_csv("data/Burnham_field_data_pathogens_wide.csv")
+
+bee_dat <- bee_dat %>%
+  mutate(
+    sampling_date = mdy(sampling_date),
+    site_code = factor(site_code),
+    field_id = factor(field_id),
+    bee_caste = factor(bee_caste),
+    bombus_spp = factor(bombus_spp),
+    host_plant = factor(host_plant),
+    sampling_event = factor(sampling_event),
+    sampling_event_num = as.numeric(as.character(sampling_event)),
+    log10_BQCV_load = log10(BQCV_pathogen_load + 1),
+    log10_DWV_load = log10(DWV_pathogen_load + 1),
+    log10_Nosema_load = log10(Nosema_pathogen_load + 1)
+  )
+
+glimpse(bee_dat)
+```
+
+# 1. Model structure for the four main variable type combinations
+
+A useful starting point is the standard `y ~ x` matrix.
+
+| Response `y` | Predictor `x` | Typical figure | Common model |
+|------------------|------------------|------------------|------------------|
+| Continuous | Continuous | scatterplot | `lm()` / Gaussian GLM |
+| Continuous | Categorical | boxplot | `lm()` / ANOVA-style model |
+| Categorical | Continuous | logistic curve | `glm(..., family = binomial)` |
+| Categorical | Categorical | grouped proportions | `glm(..., family = binomial)` |
+
+## Continuous y \~ Continuous x
+
+Use **DWV load** as the response and **BQCV** as the predictor.
+
+```{r}
+
+# filter for only pos:
+df_filtered <- bee_dat[bee_dat$log10_DWV_load > 0 & bee_dat$log10_BQCV_load > 0, ]
+
+qplot(
+  x = log10_BQCV_load,
+  y = log10_DWV_load,
+  data = df_filtered) +
+geom_smooth(method = "lm", se = TRUE)
+```
+
+```{r}
+m_cont_cont <- lm(log10_DWV_load ~ log10_BQCV_load, data = df_filtered)
+Anova(m_cont_cont)
+```
+
+## Continuous y \~ Categorical x
+
+Use **BQCV load** as the response and **bee spp** as the categorical predictor.
+
+```{r}
+qplot(
+  x = bombus_spp,
+  y = log10_BQCV_load,
+  data = df_filtered,
+  geom = "boxplot")
+```
+
+```{r}
+m_cont_cat <- lm(log10_BQCV_load ~ bombus_spp, data = df_filtered)
+Anova(m_cont_cat)
+```
+
+## Categorical y \~ Continuous x
+
+Use **BQCV presence/absence** as the response and **sampling_event** as a numeric predictor.
+
+```{r}
+qplot(
+  x = log10_BQCV_load,
+  y = DWV_pathogen_binary,
+  data = bee_dat) +
+  geom_smooth(
+    method = "glm",
+    method.args = list(family = "binomial"))
+```
+
+```{r}
+m_cat_cont <- glm(
+  DWV_pathogen_binary ~ log10_BQCV_load,
+  data = bee_dat,
+  family = binomial(link="logit")
+)
+Anova(m_cat_cont)
+```
+
+## Categorical y \~ Categorical x
+
+Use **DWV presence/absence** as the response and **bee_caste** as the predictor.
+
+```{r}
+
+# summarize
+sm <- bee_dat %>% 
+  group_by(bee_caste) %>%
+  dplyr::summarise(
+    mean = mean(DWV_pathogen_binary, na.rm=T), 
+  ) 
+
+qplot(
+  x = bee_caste,
+  y = mean,
+  data = sm
+)
+```
+
+```{r}
+m_cat_cat <- glm(
+  DWV_pathogen_binary ~ bee_caste,
+  data = bee_dat,
+  family = binomial(link="logit")
+)
+summary(m_cat_cat)
+```
+
+# 2. Testing for significance
+
+There is more than one way to test whether predictors improve a model.
+
+## Let's Create a couple of new models and test for significance:
+
+```{r}
+
+# a model using a binomial dist.
+bin_mod <- glm(data = bee_dat, DWV_pathogen_binary ~ bombus_spp * sampling_event + host_plant, family = binomial(link="logit"))
+
+# a gaussian model:
+gaus_mod <- lm(data = bee_dat, log10_Nosema_load ~ sampling_event * host_plant)
+
+
+```
+
+## Coefficient tests from the model summary
+
+```{r}
+summary(bin_mod)
+summary(gaus_mod)
+```
+
+These tests ask whether individual coefficients differ from zero, given the current model structure.
+
+## Type II or Type III tests with `car`
+
+```{r}
+Anova(bin_mod, type = 2)
+Anova(gaus_mod, type = 2)
+```
+
+These are often useful when predictors have multiple levels or when you want term-level tests rather than coefficient-level tests.
+
+-   **Type 1 (Sequential/Hierarchical):** Evaluates predictors in a specific order, adding them one by one. The order matters, as each variable is tested based on what is already in the model, commonly used for testing hierarchical models.
+
+-   **Type 2 (Marginal/Hierarchical):** Tests each effect after all other *appropriate* effects are in the model (e.g., testing main effects with interaction terms included, but not testing higher-order interactions simultaneously). It does not assume a specific order.
+
+-   **Type 3 (Partial/Marginal):** Evaluates each effect after adjusting for all other effects in the model, regardless of order. It is generally the default in many software packages for ANOVA and regression, testing if a variable adds value to the model over all others.
+
+## Likelihood ratio test: full vs null model
+
+```{r}
+m_dwv_null <- lm(data = df_filtered, log10_DWV_load ~ 1)
+m_dwv_full <- lm(data = df_filtered, log10_DWV_load ~ sampling_event + host_plant)
+
+anova(m_dwv_null, m_dwv_full, test = "LRT")
+```
+
+This asks whether the predictors improve fit compared with a model containing only an intercept.
+
+## Likelihood ratio test: full vs reduced model
+
+```{r}
+m_dwv_reduced <- lm(data = df_filtered, log10_DWV_load ~ sampling_event)
+
+anova(m_dwv_reduced, m_dwv_full, test = "LRT")
+
+```
+
+This asks whether the additional term improves the model beyond what is already included.
+
+## Term deletion with `drop1()`
+
+```{r}
+drop1(m_dwv_full, test = "Chisq")
+```
+
+This is a convenient way to evaluate each term within the same model.
+
+# 3. Distributions and log transformation
+
+The response variable should usually determine the distribution.
+
+## First, look at the response distributions
+
+### Binary response: BQCV presence
+
+```{r}
+qplot(
+  x = factor(BQCV_pathogen_binary),
+  data = bee_dat,
+  geom = "bar")
+```
+
+A 0/1 response is naturally modeled with a **binomial GLM or GLMM**.
+
+### Continuous raw response: DWV load
+
+```{r}
+qplot(
+  x = DWV_pathogen_load,
+  data = df_filtered,
+  geom = "histogram",
+  bins = 30)
+```
+
+Raw pathogen loads are often strongly right-skewed.
+
+### Log-transformed continuous response: DWV load
+
+```{r}
+qplot(
+  x = log10_DWV_load,
+  data = df_filtered,
+  geom = "histogram",
+  bins = 30)
+```
+
+The log transform often makes the distribution more symmetric and easier to model with a Gaussian response.
+
+### Continuous raw response: Nosema load
+
+```{r}
+qplot(
+  x = Nosema_pathogen_load,
+  data = bee_dat,
+  geom = "histogram",
+  bins = 30)
+```
+
+## Distribution guide
+
+-   Use **Gaussian** models for continuous responses that are roughly symmetric, often after transformation.
+-   Use **binomial** models for 0/1 responses such as pathogen presence.
+-   Use **Gamma** models for positive continuous responses when you want to model the raw scale directly.
+-   Use **Poisson** or **negative binomial** for count responses, which are not the main response type in this dataset.
+
+## Why log-transform?
+
+A log transform is useful when:
+
+-   the response is continuous and positive,
+-   the raw data are strongly right-skewed,
+-   variance increases with the mean,
+-   and interpretation on a multiplicative scale makes sense.
+
+```{r}
+m_dwv_log <- lm(log10_DWV_load ~ sampling_event + bee_caste, data = bee_dat)
+summary(m_dwv_log)
+```
+
+Do **not** log-transform binary responses. Also, logging is not mandatory if a different GLM family is more natural for the response.
+
+# 4. Random effects and nesting
+
+GLMMs extend GLMs by adding **random effects**, which account for grouped or non-independent observations.
+
+In field biology, non-independence often arises because samples are collected within the same **site**, **field**, or other grouping level.
+
+## Why random effects?
+
+Use random effects when:
+
+-   observations are clustered,
+-   you expect groups to differ in baseline response,
+-   and the group levels are better treated as a sample from a broader population rather than as fixed categories of direct interest.
+
+## Random intercept example
+
+Here is a binomial GLMM for BQCV presence with a random intercept for site.
+
+```{r}
+g_bqcv_site <- lmer(
+  log10_BQCV_load ~ bombus_spp + sampling_event + (1 | site_code),
+  data = df_filtered)
+
+Anova(g_bqcv_site)
+```
+
+## Nested random effects
+
+If fields are nested within sites, we can write that as `field_id` within `site_code`.
+
+```{r}
+g_bqcv_site <- lmer(
+  log10_BQCV_load ~ bombus_spp + (1 | site_code/sampling_event),
+  data = df_filtered)
+
+Anova(g_bqcv_site)
+```
+
+This expands to random intercepts for site ID and for sampling event nested within site.
+
+## Gamma mixed model example
+
+We can also use a mixed model for a different response error dist.
+
+```{r}
+
+# make pos only nosema
+nosPos <- bee_dat[bee_dat$Nosema_pathogen_load > 0,]
+
+# gamma
+nos_gamma <- glmer(
+  Nosema_pathogen_load ~ site_code + bombus_spp + (1 | sampling_event),
+  data = nosPos, family = Gamma)
+Anova(nos_gamma)
+
+# log
+nos_log <- lmer(
+  log10_Nosema_load ~ site_code + bombus_spp + (1 | sampling_event),
+  data = nosPos)
+Anova(nos_log)
+```
+
+In practice, random effects are justified both statistically and biologically. If repeated samples come from shared sites or fields, independence is violated, and mixed models are often the better choice.
+
+# 
+
+# 5. Interactions
+
+Interactions ask whether the effect of one predictor depends on the level of another predictor.
+
+Because **sampling_event** is time-like, it is a useful interaction term in this dataset.
+
+## Example 1: interaction in a Gaussian model
+
+Does the change in DWV load across sampling event differ by caste?
+
+```{r}
+qplot(
+  x = sampling_event_num,
+  y = log10_DWV_load,
+  color = bee_caste,
+  data = bee_dat)
+```
+
+```{r}
+m_dwv_interaction <- lmer(log10_DWV_load ~ sampling_event * bee_caste + (1 | site_code), data = bee_dat)
+summary(m_dwv_interaction)
+Anova(m_dwv_interaction, type = 2)
+```
+
+## Example 2: interaction in a binomial model
+
+Does the probability of BQCV infection across sampling event differ by caste?
+
+```{r}
+m_bqcv_interaction <- glm(
+  BQCV_pathogen_binary ~ sampling_event * log10_DWV_load,
+  data = bee_dat,
+  family = binomial(link="logit")
+)
+summary(m_bqcv_interaction)
+Anova(m_bqcv_interaction, type = 2)
+```
+
+You can also compare the interaction model to the additive model:
+
+```{r}
+m_bqcv_additive <- glm(
+  BQCV_pathogen_binary ~ sampling_event + log10_DWV_load,
+  data = bee_dat,
+  family = binomial(link="logit")
+)
+
+summary(m_bqcv_additive) # higher aic
+Anova(m_bqcv_additive, type = 2)
+
+anova(m_bqcv_additive, m_bqcv_interaction, test = "Chisq")
+```
+
+# Closing summary
+
+-   Start by identifying whether the response is **continuous** or **categorical**.
+-   Use the `y ~ x` matrix to choose a basic model structure.
+-   Inspect the **distribution of the response** before choosing a family.
+-   Use **log transformation** for right-skewed continuous responses when appropriate.
+-   Use **interactions** when the effect of one predictor may depend on another.
+-   Use **random effects** when observations are grouped or nested.
+-   Test significance using several complementary tools: `summary()`, `car::Anova()`, likelihood ratio tests, and reduced-model comparisons.

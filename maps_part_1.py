@@ -1,0 +1,196 @@
+# Using plotly to create maps in python
+# P. Alexander Burnham
+# 7 April 2026
+
+# load packages:
+import json
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+
+# load data here (gapminder)
+gap = px.data.gapminder().query("year==2007")
+gap.head()
+
+# min. level choropleth
+fig = px.choropleth(
+    gap,
+    locations = "iso_alpha",
+    color = "lifeExp",
+    hover_name="country"
+)
+fig.show()
+
+
+# add a title, change coloration
+fig = px.choropleth(
+    gap,
+    locations = "iso_alpha",
+    color = "lifeExp",
+    hover_name="country",
+    color_continuous_scale="Viridis",
+    title = "Life Exp. By Country (2007)"
+
+)
+fig.show()
+
+# crop this map and improve labels:
+fig.update_layout(
+    coloraxis_colorbar_title = "Years",
+    margin = dict(l=0, r = 0, t = 50, b = 0)
+)
+
+# gdp with more hovering information:
+fig = px.choropleth(
+    gap,
+    locations = "iso_alpha",
+    color = "gdpPercap",
+    hover_name="country",
+    hover_data = {
+        "lifeExp": ":1f",
+        "pop": ":,",
+        "gdpPercap": ":,.0f",
+        "iso_alpha": False
+    },
+    color_continuous_scale="Plasma",
+    title = "GDP per cap. by country (2007)"
+)
+fig.show()
+
+# update outlines of GDP map
+
+fig.update_geos(
+    showframe = False,
+    showcoastlines = False
+)
+
+
+# crop map to one region
+americas = gap.query("continent == 'Americas'")
+
+americas
+
+
+fig = px.choropleth(
+    americas,
+    locations = "iso_alpha",
+    color = "lifeExp",
+    hover_name="country",
+    color_continuous_scale="Tealgrn",
+    title = "Life Exp. in the Americas (2007)"
+)
+
+fig.update_geos(
+    scope = "north america",
+    showland = True,
+    landcolor = "rgb(240,240,240)"
+)
+
+fig.show()
+
+
+# look at some prj.
+
+fig.update_geos(projection_type="orthographic")
+fig.show()
+
+# tile based choropleths
+
+from urllib.request import urlopen
+
+with urlopen("https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json") as response:
+    county_geojson = json.load(response)
+
+county_df = pd.read_csv(
+    "https://raw.githubusercontent.com/plotly/datasets/master/fips-unemp-16.csv",
+    dtype={"fips": str}
+)
+
+
+
+fig = px.choropleth_map(
+    county_df,
+    geojson=county_geojson,
+    locations="fips",
+    featureidkey="id",
+    color="unemp",
+    color_continuous_scale="Viridis",
+    zoom=3,
+    center={"lat": 37.8, "lon": -96},
+    map_style="carto-darkmatter",
+    opacity=0.7,
+    title="US county unemployment"
+)
+fig.show()
+
+# DENSITY HEAT MAPS
+
+eq = pd.read_csv(
+    "https://raw.githubusercontent.com/plotly/datasets/master/earthquakes-23k.csv"
+)
+eq.head()
+
+
+fig = px.density_map(
+    eq,
+    lat = "Latitude",
+    lon = "Longitude",
+    z = "Magnitude",
+    radius = 10,
+    zoom = 0,
+    center = {"lat": 0, "lon": 180},
+    map_style = "open-street-map",
+    title = "Global Earthquake Density"
+)
+fig.show()
+
+
+# increase radius
+fig = px.density_map(
+    eq,
+    lat = "Latitude",
+    lon = "Longitude",
+    z = "Magnitude",
+    radius = 10,
+    zoom = 0,
+    center = {"lat": 0, "lon": 180},
+    map_style = "open-street-map",
+    title = "Global Earthquake Density"
+)
+fig.show()
+
+fig.update_traces(opacity = 0.6)
+
+
+# focus on a region
+pacific = eq.query("Latitude > -60 and Latitude < 60 and Longitude > 100")
+
+
+fig = px.density_map(
+    pacific,
+    lat = "Latitude",
+    lon = "Longitude",
+    z = "Magnitude",
+    radius = 12,
+    zoom = 2,
+    center = {"lat": 10, "lon": 160},
+    map_style = "carto-darkmatter",
+    title = "Pacific Earthquake Density"
+)
+fig.show()
+
+
+# bubble map 
+gap
+
+fig = px.scatter_geo(
+    gap,
+    locations = "iso_alpha",
+    color = "continent",
+    hover_name = "country",
+    size = "pop",
+    projection = "natural earth"
+)
+
+
+

@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="P. Alexander Burnham">
+
+<title>GLMs, GLMMs, and Choosing a Distribution</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="glmm_lecture_files/libs/clipboard/clipboard.min.js"></script>
+<script src="glmm_lecture_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="glmm_lecture_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="glmm_lecture_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="glmm_lecture_files/libs/quarto-html/popper.min.js"></script>
+<script src="glmm_lecture_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="glmm_lecture_files/libs/quarto-html/anchor.min.js"></script>
+<link href="glmm_lecture_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="glmm_lecture_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="glmm_lecture_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="glmm_lecture_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="glmm_lecture_files/libs/bootstrap/bootstrap-a74871fe4945b66d259aafc266475145.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">1</span> Overview</a></li>
+  <li><a href="#load-packages-and-import-data" id="toc-load-packages-and-import-data" class="nav-link" data-scroll-target="#load-packages-and-import-data"><span class="header-section-number">2</span> Load packages and import data</a></li>
+  <li><a href="#model-structure-for-the-four-main-variable-type-combinations" id="toc-model-structure-for-the-four-main-variable-type-combinations" class="nav-link" data-scroll-target="#model-structure-for-the-four-main-variable-type-combinations"><span class="header-section-number">3</span> 1. Model structure for the four main variable type combinations</a>
+  <ul class="collapse">
+  <li><a href="#continuous-y-continuous-x" id="toc-continuous-y-continuous-x" class="nav-link" data-scroll-target="#continuous-y-continuous-x"><span class="header-section-number">3.1</span> Continuous y ~ Continuous x</a></li>
+  <li><a href="#continuous-y-categorical-x" id="toc-continuous-y-categorical-x" class="nav-link" data-scroll-target="#continuous-y-categorical-x"><span class="header-section-number">3.2</span> Continuous y ~ Categorical x</a></li>
+  <li><a href="#categorical-y-continuous-x" id="toc-categorical-y-continuous-x" class="nav-link" data-scroll-target="#categorical-y-continuous-x"><span class="header-section-number">3.3</span> Categorical y ~ Continuous x</a></li>
+  <li><a href="#categorical-y-categorical-x" id="toc-categorical-y-categorical-x" class="nav-link" data-scroll-target="#categorical-y-categorical-x"><span class="header-section-number">3.4</span> Categorical y ~ Categorical x</a></li>
+  </ul></li>
+  <li><a href="#testing-for-significance" id="toc-testing-for-significance" class="nav-link" data-scroll-target="#testing-for-significance"><span class="header-section-number">4</span> 2. Testing for significance</a>
+  <ul class="collapse">
+  <li><a href="#lets-create-a-couple-of-new-models-and-test-for-significance" id="toc-lets-create-a-couple-of-new-models-and-test-for-significance" class="nav-link" data-scroll-target="#lets-create-a-couple-of-new-models-and-test-for-significance"><span class="header-section-number">4.1</span> Let’s Create a couple of new models and test for significance:</a></li>
+  <li><a href="#coefficient-tests-from-the-model-summary" id="toc-coefficient-tests-from-the-model-summary" class="nav-link" data-scroll-target="#coefficient-tests-from-the-model-summary"><span class="header-section-number">4.2</span> Coefficient tests from the model summary</a></li>
+  <li><a href="#type-ii-or-type-iii-tests-with-car" id="toc-type-ii-or-type-iii-tests-with-car" class="nav-link" data-scroll-target="#type-ii-or-type-iii-tests-with-car"><span class="header-section-number">4.3</span> Type II or Type III tests with <code>car</code></a></li>
+  <li><a href="#likelihood-ratio-test-full-vs-null-model" id="toc-likelihood-ratio-test-full-vs-null-model" class="nav-link" data-scroll-target="#likelihood-ratio-test-full-vs-null-model"><span class="header-section-number">4.4</span> Likelihood ratio test: full vs null model</a></li>
+  <li><a href="#likelihood-ratio-test-full-vs-reduced-model" id="toc-likelihood-ratio-test-full-vs-reduced-model" class="nav-link" data-scroll-target="#likelihood-ratio-test-full-vs-reduced-model"><span class="header-section-number">4.5</span> Likelihood ratio test: full vs reduced model</a></li>
+  <li><a href="#term-deletion-with-drop1" id="toc-term-deletion-with-drop1" class="nav-link" data-scroll-target="#term-deletion-with-drop1"><span class="header-section-number">4.6</span> Term deletion with <code>drop1()</code></a></li>
+  </ul></li>
+  <li><a href="#distributions-and-log-transformation" id="toc-distributions-and-log-transformation" class="nav-link" data-scroll-target="#distributions-and-log-transformation"><span class="header-section-number">5</span> 3. Distributions and log transformation</a>
+  <ul class="collapse">
+  <li><a href="#first-look-at-the-response-distributions" id="toc-first-look-at-the-response-distributions" class="nav-link" data-scroll-target="#first-look-at-the-response-distributions"><span class="header-section-number">5.1</span> First, look at the response distributions</a></li>
+  <li><a href="#distribution-guide" id="toc-distribution-guide" class="nav-link" data-scroll-target="#distribution-guide"><span class="header-section-number">5.2</span> Distribution guide</a></li>
+  <li><a href="#why-log-transform" id="toc-why-log-transform" class="nav-link" data-scroll-target="#why-log-transform"><span class="header-section-number">5.3</span> Why log-transform?</a></li>
+  </ul></li>
+  <li><a href="#random-effects-and-nesting" id="toc-random-effects-and-nesting" class="nav-link" data-scroll-target="#random-effects-and-nesting"><span class="header-section-number">6</span> 4. Random effects and nesting</a>
+  <ul class="collapse">
+  <li><a href="#why-random-effects" id="toc-why-random-effects" class="nav-link" data-scroll-target="#why-random-effects"><span class="header-section-number">6.1</span> Why random effects?</a></li>
+  <li><a href="#random-intercept-example" id="toc-random-intercept-example" class="nav-link" data-scroll-target="#random-intercept-example"><span class="header-section-number">6.2</span> Random intercept example</a></li>
+  <li><a href="#nested-random-effects" id="toc-nested-random-effects" class="nav-link" data-scroll-target="#nested-random-effects"><span class="header-section-number">6.3</span> Nested random effects</a></li>
+  <li><a href="#gamma-mixed-model-example" id="toc-gamma-mixed-model-example" class="nav-link" data-scroll-target="#gamma-mixed-model-example"><span class="header-section-number">6.4</span> Gamma mixed model example</a></li>
+  </ul></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"><span class="header-section-number">7</span> </a></li>
+  <li><a href="#interactions" id="toc-interactions" class="nav-link" data-scroll-target="#interactions"><span class="header-section-number">8</span> 5. Interactions</a>
+  <ul class="collapse">
+  <li><a href="#example-1-interaction-in-a-gaussian-model" id="toc-example-1-interaction-in-a-gaussian-model" class="nav-link" data-scroll-target="#example-1-interaction-in-a-gaussian-model"><span class="header-section-number">8.1</span> Example 1: interaction in a Gaussian model</a></li>
+  <li><a href="#example-2-interaction-in-a-binomial-model" id="toc-example-2-interaction-in-a-binomial-model" class="nav-link" data-scroll-target="#example-2-interaction-in-a-binomial-model"><span class="header-section-number">8.2</span> Example 2: interaction in a binomial model</a></li>
+  </ul></li>
+  <li><a href="#closing-summary" id="toc-closing-summary" class="nav-link" data-scroll-target="#closing-summary"><span class="header-section-number">9</span> Closing summary</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">GLMs, GLMMs, and Choosing a Distribution</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>P. Alexander Burnham </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="overview" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Overview</h1>
+<p>This lecture uses the <strong>Bumble Bee Disease Seasonal Variation dataset</strong> and is organized into five core topics:</p>
+<ol type="1">
+<li><strong>Model structure for the four main <code>y ~ x</code> data-type combinations</strong></li>
+<li><strong>Testing for significance</strong></li>
+<li><strong>Distributions and log-transformation</strong></li>
+<li><strong>Random effects and nesting</strong></li>
+<li><strong>Interaction effects</strong></li>
+</ol>
+<p>The response variable should usually drive the choice of model family. In this dataset we can use:</p>
+<ul>
+<li><strong>BQCV, DWV and Nosema</strong> prevalence as a binary response</li>
+<li><strong>BQCV, DWV and Nosema load</strong> as a continuous response,</li>
+<li><strong>Bee Species, Host Plant, and Bee Cast</strong> as categorical predictors</li>
+<li>and <strong>Sampling Event</strong> as a time-like predictor.</li>
+<li><strong>Site Code</strong> as random effects</li>
+</ul>
+</section>
+<section id="load-packages-and-import-data" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Load packages and import data</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>bee_dat <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/Burnham_field_data_pathogens_wide.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>bee_dat <span class="ot">&lt;-</span> bee_dat <span class="sc">%&gt;%</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">sampling_date =</span> <span class="fu">mdy</span>(sampling_date),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">site_code =</span> <span class="fu">factor</span>(site_code),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">field_id =</span> <span class="fu">factor</span>(field_id),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">bee_caste =</span> <span class="fu">factor</span>(bee_caste),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">bombus_spp =</span> <span class="fu">factor</span>(bombus_spp),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">host_plant =</span> <span class="fu">factor</span>(host_plant),</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">sampling_event =</span> <span class="fu">factor</span>(sampling_event),</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">sampling_event_num =</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(sampling_event)),</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">log10_BQCV_load =</span> <span class="fu">log10</span>(BQCV_pathogen_load <span class="sc">+</span> <span class="dv">1</span>),</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">log10_DWV_load =</span> <span class="fu">log10</span>(DWV_pathogen_load <span class="sc">+</span> <span class="dv">1</span>),</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">log10_Nosema_load =</span> <span class="fu">log10</span>(Nosema_pathogen_load <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(bee_dat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 298
+Columns: 18
+$ id                     &lt;dbl&gt; 1, 3, 4, 5, 6, 8, 10, 11, 12, 13, 15, 16, 17, 1…
+$ sampling_date          &lt;date&gt; 2020-09-09, 2020-09-10, 2020-09-10, 2020-09-09…
+$ site_code              &lt;fct&gt; BOST, MUDGE, MUDGE, BOST, CIND, MUDGE, CIND, BO…
+$ field_id               &lt;fct&gt; 6, 18, 11, 11, 14, 4, 13, 38, 5, 12, 18, 23, 20…
+$ bombus_spp             &lt;fct&gt; impatiens, impatiens, impatiens, impatiens, imp…
+$ host_plant             &lt;fct&gt; solidago, crown vetch, crown vetch, solidago, k…
+$ bee_caste              &lt;fct&gt; worker, worker, worker, male, worker, worker, w…
+$ sampling_event         &lt;fct&gt; 4, 4, 4, 4, 4, 4, 4, 2, 4, 4, 4, 4, 4, 4, 4, 4,…
+$ BQCV_pathogen_binary   &lt;dbl&gt; 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1,…
+$ DWV_pathogen_binary    &lt;dbl&gt; 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1,…
+$ Nosema_pathogen_binary &lt;dbl&gt; NA, 0, 1, NA, 0, NA, 0, 0, 0, 0, 1, 0, 0, 0, 0,…
+$ BQCV_pathogen_load     &lt;dbl&gt; 2414168.8, 760793.2, 0.0, 0.0, 124236.8, 413814…
+$ DWV_pathogen_load      &lt;dbl&gt; 85329.54, 45153.03, 0.00, 0.00, 215750.28, 2769…
+$ Nosema_pathogen_load   &lt;dbl&gt; NA, 0, 225000, NA, 0, NA, 0, 0, 0, 0, 50000, 0,…
+$ sampling_event_num     &lt;dbl&gt; 4, 4, 4, 4, 4, 4, 4, 2, 4, 4, 4, 4, 4, 4, 4, 4,…
+$ log10_BQCV_load        &lt;dbl&gt; 6.382768, 5.881267, 0.000000, 0.000000, 5.09425…
+$ log10_DWV_load         &lt;dbl&gt; 4.931105, 4.654697, 0.000000, 0.000000, 5.33395…
+$ log10_Nosema_load      &lt;dbl&gt; NA, 0.000000, 5.352184, NA, 0.000000, NA, 0.000…</code></pre>
+</div>
+</div>
+</section>
+<section id="model-structure-for-the-four-main-variable-type-combinations" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> 1. Model structure for the four main variable type combinations</h1>
+<p>A useful starting point is the standard <code>y ~ x</code> matrix.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Response <code>y</code></th>
+<th>Predictor <code>x</code></th>
+<th>Typical figure</th>
+<th>Common model</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Continuous</td>
+<td>Continuous</td>
+<td>scatterplot</td>
+<td><code>lm()</code> / Gaussian GLM</td>
+</tr>
+<tr class="even">
+<td>Continuous</td>
+<td>Categorical</td>
+<td>boxplot</td>
+<td><code>lm()</code> / ANOVA-style model</td>
+</tr>
+<tr class="odd">
+<td>Categorical</td>
+<td>Continuous</td>
+<td>logistic curve</td>
+<td><code>glm(..., family = binomial)</code></td>
+</tr>
+<tr class="even">
+<td>Categorical</td>
+<td>Categorical</td>
+<td>grouped proportions</td>
+<td><code>glm(..., family = binomial)</code></td>
+</tr>
+</tbody>
+</table>
+<section id="continuous-y-continuous-x" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="continuous-y-continuous-x"><span class="header-section-number">3.1</span> Continuous y ~ Continuous x</h2>
+<p>Use <strong>DWV load</strong> as the response and <strong>BQCV</strong> as the predictor.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># filter for only pos:</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df_filtered <span class="ot">&lt;-</span> bee_dat[bee_dat<span class="sc">$</span>log10_DWV_load <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> bee_dat<span class="sc">$</span>log10_BQCV_load <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">qplot</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> log10_BQCV_load,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> log10_DWV_load,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df_filtered) <span class="sc">+</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="glmm_lecture_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>m_cont_cont <span class="ot">&lt;-</span> <span class="fu">lm</span>(log10_DWV_load <span class="sc">~</span> log10_BQCV_load, <span class="at">data =</span> df_filtered)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(m_cont_cont)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type II tests)
+
+Response: log10_DWV_load
+                Sum Sq Df F value Pr(&gt;F)
+log10_BQCV_load  0.695  1  1.3531  0.248
+Residuals       43.145 84               </code></pre>
+</div>
+</div>
+</section>
+<section id="continuous-y-categorical-x" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="continuous-y-categorical-x"><span class="header-section-number">3.2</span> Continuous y ~ Categorical x</h2>
+<p>Use <strong>BQCV load</strong> as the response and <strong>bee spp</strong> as the categorical predictor.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qplot</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> bombus_spp,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> log10_BQCV_load,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df_filtered,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">geom =</span> <span class="st">"boxplot"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="glmm_lecture_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>m_cont_cat <span class="ot">&lt;-</span> <span class="fu">lm</span>(log10_BQCV_load <span class="sc">~</span> bombus_spp, <span class="at">data =</span> df_filtered)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(m_cont_cat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type II tests)
+
+Response: log10_BQCV_load
+           Sum Sq Df F value Pr(&gt;F)  
+bombus_spp  8.826  3  2.7475 0.0481 *
+Residuals  87.810 82                 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+</section>
+<section id="categorical-y-continuous-x" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="categorical-y-continuous-x"><span class="header-section-number">3.3</span> Categorical y ~ Continuous x</h2>
+<p>Use <strong>BQCV presence/absence</strong> as the response and <strong>sampling_event</strong> as a numeric predictor.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qplot</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> log10_BQCV_load,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> DWV_pathogen_binary,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> bee_dat) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"glm"</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">method.args =</span> <span class="fu">list</span>(<span class="at">family =</span> <span class="st">"binomial"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="glmm_lecture_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>m_cat_cont <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  DWV_pathogen_binary <span class="sc">~</span> log10_BQCV_load,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> bee_dat,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link=</span><span class="st">"logit"</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(m_cat_cont)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table (Type II tests)
+
+Response: DWV_pathogen_binary
+                LR Chisq Df Pr(&gt;Chisq)
+log10_BQCV_load 0.023025  1     0.8794</code></pre>
+</div>
+</div>
+</section>
+<section id="categorical-y-categorical-x" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="categorical-y-categorical-x"><span class="header-section-number">3.4</span> Categorical y ~ Categorical x</h2>
+<p>Use <strong>DWV presence/absence</strong> as the response and <strong>bee_caste</strong> as the predictor.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># summarize</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>sm <span class="ot">&lt;-</span> bee_dat <span class="sc">%&gt;%</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(bee_caste) <span class="sc">%&gt;%</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean =</span> <span class="fu">mean</span>(DWV_pathogen_binary, <span class="at">na.rm=</span>T), </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="fu">qplot</span>(</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> bee_caste,</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> mean,</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> sm</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="glmm_lecture_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>m_cat_cat <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  DWV_pathogen_binary <span class="sc">~</span> bee_caste,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> bee_dat,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link=</span><span class="st">"logit"</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_cat_cat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = DWV_pathogen_binary ~ bee_caste, family = binomial(link = "logit"), 
+    data = bee_dat)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-0.9767  -0.9183  -0.9183   1.4608   1.5645  
+
+Coefficients:
+                Estimate Std. Error z value Pr(&gt;|z|)
+(Intercept)      -0.8755     0.5323  -1.645    0.100
+bee_castequeen    0.3830     0.5971   0.641    0.521
+bee_casteworker   0.2301     0.5511   0.418    0.676
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 378.72  on 292  degrees of freedom
+Residual deviance: 378.23  on 290  degrees of freedom
+  (5 observations deleted due to missingness)
+AIC: 384.23
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="testing-for-significance" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> 2. Testing for significance</h1>
+<p>There is more than one way to test whether predictors improve a model.</p>
+<section id="lets-create-a-couple-of-new-models-and-test-for-significance" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="lets-create-a-couple-of-new-models-and-test-for-significance"><span class="header-section-number">4.1</span> Let’s Create a couple of new models and test for significance:</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a model using a binomial dist.</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>bin_mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="at">data =</span> bee_dat, DWV_pathogen_binary <span class="sc">~</span> bombus_spp <span class="sc">*</span> sampling_event <span class="sc">+</span> host_plant, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link=</span><span class="st">"logit"</span>))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># a gaussian model:</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>gaus_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data =</span> bee_dat, log10_Nosema_load <span class="sc">~</span> sampling_event <span class="sc">*</span> host_plant)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="coefficient-tests-from-the-model-summary" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="coefficient-tests-from-the-model-summary"><span class="header-section-number">4.2</span> Coefficient tests from the model summary</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(bin_mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = DWV_pathogen_binary ~ bombus_spp * sampling_event + 
+    host_plant, family = binomial(link = "logit"), data = bee_dat)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-1.2120  -0.9120  -0.7601   1.3626   1.9640  
+
+Coefficients: (9 not defined because of singularities)
+                                      Estimate Std. Error z value Pr(&gt;|z|)
+(Intercept)                         -1.623e+00  3.724e+05   0.000    1.000
+bombus_sppfervidus                   4.226e+04  6.711e+07   0.001    0.999
+bombus_sppimpatiens                  1.135e+00  2.006e+00   0.566    0.571
+bombus_sppternarius                 -1.310e+06  6.711e+07  -0.020    0.984
+bombus_sppvagans                     2.384e+01  6.201e+04   0.000    1.000
+sampling_event2                     -1.599e+00  2.230e+05   0.000    1.000
+sampling_event3                     -2.512e+01  2.150e+05   0.000    1.000
+sampling_event4                      2.131e+14  2.377e+14   0.897    0.370
+host_plantcrown vetch                2.569e+01  3.041e+05   0.000    1.000
+host_plantdandelion                 -1.748e-01  3.724e+05   0.000    1.000
+host_plantflight                     3.163e-03  3.724e+05   0.000    1.000
+host_plantjewel weed                 2.519e+01  3.041e+05   0.000    1.000
+host_plantknot weed                  5.287e+01  3.821e+05   0.000    1.000
+host_plantmint                       4.320e-01  3.724e+05   0.000    1.000
+host_plantred clover                 2.513e+01  3.041e+05   0.000    1.000
+host_plantsaint johns wort           2.525e+01  3.041e+05   0.000    1.000
+host_plantsolidago                   2.543e+01  3.041e+05   0.000    1.000
+host_plantthistle                    6.310e-04  4.300e+05   0.000    1.000
+host_plantviolet                    -1.487e-01  3.724e+05   0.000    1.000
+host_plantwoody yellow               4.489e-01  3.724e+05   0.000    1.000
+bombus_sppfervidus:sampling_event2          NA         NA      NA       NA
+bombus_sppimpatiens:sampling_event2 -2.403e+01  5.902e+04   0.000    1.000
+bombus_sppternarius:sampling_event2         NA         NA      NA       NA
+bombus_sppvagans:sampling_event2            NA         NA      NA       NA
+bombus_sppfervidus:sampling_event3          NA         NA      NA       NA
+bombus_sppimpatiens:sampling_event3         NA         NA      NA       NA
+bombus_sppternarius:sampling_event3         NA         NA      NA       NA
+bombus_sppvagans:sampling_event3            NA         NA      NA       NA
+bombus_sppfervidus:sampling_event4          NA         NA      NA       NA
+bombus_sppimpatiens:sampling_event4 -2.131e+14  2.377e+14  -0.897    0.370
+bombus_sppternarius:sampling_event4         NA         NA      NA       NA
+bombus_sppvagans:sampling_event4    -2.131e+14  2.377e+14  -0.897    0.370
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 377.00  on 290  degrees of freedom
+Residual deviance: 349.87  on 268  degrees of freedom
+  (7 observations deleted due to missingness)
+AIC: 395.87
+
+Number of Fisher Scoring iterations: 25</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(gaus_mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log10_Nosema_load ~ sampling_event * host_plant, 
+    data = bee_dat)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-3.549 -1.268 -1.240  2.155  5.126 
+
+Coefficients: (31 not defined because of singularities)
+                                             Estimate Std. Error t value
+(Intercept)                                 5.211e-01  2.819e+00   0.185
+sampling_event2                             3.482e+00  2.420e+00   1.439
+sampling_event3                            -5.180e-01  1.771e+00  -0.292
+sampling_event4                            -5.211e-01  1.688e+00  -0.309
+host_plantcrown vetch                       1.303e+00  2.314e+00   0.563
+host_plantdandelion                         7.962e-01  2.849e+00   0.279
+host_plantflight                            2.199e+00  2.766e+00   0.795
+host_plantjewel weed                        7.763e-01  2.317e+00   0.335
+host_plantknot weed                        -1.482e-14  2.766e+00   0.000
+host_plantmint                              1.678e+00  3.240e+00   0.518
+host_plantred clover                        1.240e+00  2.281e+00   0.544
+host_plantsaint johns wort                  1.085e+00  2.531e+00   0.429
+host_plantsolidago                          1.269e+00  2.295e+00   0.553
+host_plantthistle                          -7.621e-15  3.193e+00   0.000
+host_plantviolet                           -5.211e-01  3.106e+00  -0.168
+host_plantwoody yellow                      3.877e+00  3.612e+00   1.073
+sampling_event2:host_plantcrown vetch      -1.757e+00  2.130e+00  -0.825
+sampling_event3:host_plantcrown vetch       1.106e+00  8.413e-01   1.314
+sampling_event4:host_plantcrown vetch              NA         NA      NA
+sampling_event2:host_plantdandelion                NA         NA      NA
+sampling_event3:host_plantdandelion                NA         NA      NA
+sampling_event4:host_plantdandelion                NA         NA      NA
+sampling_event2:host_plantflight                   NA         NA      NA
+sampling_event3:host_plantflight                   NA         NA      NA
+sampling_event4:host_plantflight                   NA         NA      NA
+sampling_event2:host_plantjewel weed               NA         NA      NA
+sampling_event3:host_plantjewel weed        4.096e+00  2.378e+00   1.722
+sampling_event4:host_plantjewel weed               NA         NA      NA
+sampling_event2:host_plantknot weed                NA         NA      NA
+sampling_event3:host_plantknot weed         5.094e+00  2.817e+00   1.808
+sampling_event4:host_plantknot weed                NA         NA      NA
+sampling_event2:host_plantmint                     NA         NA      NA
+sampling_event3:host_plantmint                     NA         NA      NA
+sampling_event4:host_plantmint                     NA         NA      NA
+sampling_event2:host_plantred clover       -4.085e+00  1.770e+00  -2.308
+sampling_event3:host_plantred clover               NA         NA      NA
+sampling_event4:host_plantred clover               NA         NA      NA
+sampling_event2:host_plantsaint johns wort         NA         NA      NA
+sampling_event3:host_plantsaint johns wort         NA         NA      NA
+sampling_event4:host_plantsaint johns wort         NA         NA      NA
+sampling_event2:host_plantsolidago                 NA         NA      NA
+sampling_event3:host_plantsolidago                 NA         NA      NA
+sampling_event4:host_plantsolidago                 NA         NA      NA
+sampling_event2:host_plantthistle                  NA         NA      NA
+sampling_event3:host_plantthistle                  NA         NA      NA
+sampling_event4:host_plantthistle                  NA         NA      NA
+sampling_event2:host_plantviolet                   NA         NA      NA
+sampling_event3:host_plantviolet                   NA         NA      NA
+sampling_event4:host_plantviolet                   NA         NA      NA
+sampling_event2:host_plantwoody yellow             NA         NA      NA
+sampling_event3:host_plantwoody yellow             NA         NA      NA
+sampling_event4:host_plantwoody yellow             NA         NA      NA
+                                           Pr(&gt;|t|)  
+(Intercept)                                  0.8535  
+sampling_event2                              0.1515  
+sampling_event3                              0.7702  
+sampling_event4                              0.7578  
+host_plantcrown vetch                        0.5737  
+host_plantdandelion                          0.7801  
+host_plantflight                             0.4273  
+host_plantjewel weed                         0.7378  
+host_plantknot weed                          1.0000  
+host_plantmint                               0.6050  
+host_plantred clover                         0.5872  
+host_plantsaint johns wort                   0.6686  
+host_plantsolidago                           0.5810  
+host_plantthistle                            1.0000  
+host_plantviolet                             0.8669  
+host_plantwoody yellow                       0.2842  
+sampling_event2:host_plantcrown vetch        0.4101  
+sampling_event3:host_plantcrown vetch        0.1900  
+sampling_event4:host_plantcrown vetch            NA  
+sampling_event2:host_plantdandelion              NA  
+sampling_event3:host_plantdandelion              NA  
+sampling_event4:host_plantdandelion              NA  
+sampling_event2:host_plantflight                 NA  
+sampling_event3:host_plantflight                 NA  
+sampling_event4:host_plantflight                 NA  
+sampling_event2:host_plantjewel weed             NA  
+sampling_event3:host_plantjewel weed         0.0863 .
+sampling_event4:host_plantjewel weed             NA  
+sampling_event2:host_plantknot weed              NA  
+sampling_event3:host_plantknot weed          0.0718 .
+sampling_event4:host_plantknot weed              NA  
+sampling_event2:host_plantmint                   NA  
+sampling_event3:host_plantmint                   NA  
+sampling_event4:host_plantmint                   NA  
+sampling_event2:host_plantred clover         0.0218 *
+sampling_event3:host_plantred clover             NA  
+sampling_event4:host_plantred clover             NA  
+sampling_event2:host_plantsaint johns wort       NA  
+sampling_event3:host_plantsaint johns wort       NA  
+sampling_event4:host_plantsaint johns wort       NA  
+sampling_event2:host_plantsolidago               NA  
+sampling_event3:host_plantsolidago               NA  
+sampling_event4:host_plantsolidago               NA  
+sampling_event2:host_plantthistle                NA  
+sampling_event3:host_plantthistle                NA  
+sampling_event4:host_plantthistle                NA  
+sampling_event2:host_plantviolet                 NA  
+sampling_event3:host_plantviolet                 NA  
+sampling_event4:host_plantviolet                 NA  
+sampling_event2:host_plantwoody yellow           NA  
+sampling_event3:host_plantwoody yellow           NA  
+sampling_event4:host_plantwoody yellow           NA  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.258 on 250 degrees of freedom
+  (27 observations deleted due to missingness)
+Multiple R-squared:  0.1227,    Adjusted R-squared:  0.05254 
+F-statistic: 1.749 on 20 and 250 DF,  p-value: 0.02687</code></pre>
+</div>
+</div>
+<p>These tests ask whether individual coefficients differ from zero, given the current model structure.</p>
+</section>
+<section id="type-ii-or-type-iii-tests-with-car" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="type-ii-or-type-iii-tests-with-car"><span class="header-section-number">4.3</span> Type II or Type III tests with <code>car</code></h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(bin_mod, <span class="at">type =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table (Type II tests)
+
+Response: DWV_pathogen_binary
+                          LR Chisq Df Pr(&gt;Chisq)    
+bombus_spp                    4.19  4     0.3810    
+sampling_event                5.95  3     0.1140    
+host_plant                 2144.88 12     &lt;2e-16 ***
+bombus_spp:sampling_event     3.55  3     0.3138    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(gaus_mod, <span class="at">type =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type II tests)
+
+Response: log10_Nosema_load
+                           Sum Sq  Df F value  Pr(&gt;F)  
+sampling_event              14.47   3  0.9457 0.41913  
+host_plant                  72.09  12  1.1782 0.29911  
+sampling_event:host_plant   73.51   5  2.8834 0.01499 *
+Residuals                 1274.71 250                  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>These are often useful when predictors have multiple levels or when you want term-level tests rather than coefficient-level tests.</p>
+<ul>
+<li><p><strong>Type 1 (Sequential/Hierarchical):</strong> Evaluates predictors in a specific order, adding them one by one. The order matters, as each variable is tested based on what is already in the model, commonly used for testing hierarchical models.</p></li>
+<li><p><strong>Type 2 (Marginal/Hierarchical):</strong> Tests each effect after all other <em>appropriate</em> effects are in the model (e.g., testing main effects with interaction terms included, but not testing higher-order interactions simultaneously). It does not assume a specific order.</p></li>
+<li><p><strong>Type 3 (Partial/Marginal):</strong> Evaluates each effect after adjusting for all other effects in the model, regardless of order. It is generally the default in many software packages for ANOVA and regression, testing if a variable adds value to the model over all others.</p></li>
+</ul>
+</section>
+<section id="likelihood-ratio-test-full-vs-null-model" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="likelihood-ratio-test-full-vs-null-model"><span class="header-section-number">4.4</span> Likelihood ratio test: full vs null model</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>m_dwv_null <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data =</span> df_filtered, log10_DWV_load <span class="sc">~</span> <span class="dv">1</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>m_dwv_full <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data =</span> df_filtered, log10_DWV_load <span class="sc">~</span> sampling_event <span class="sc">+</span> host_plant)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m_dwv_null, m_dwv_full, <span class="at">test =</span> <span class="st">"LRT"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: log10_DWV_load ~ 1
+Model 2: log10_DWV_load ~ sampling_event + host_plant
+  Res.Df    RSS Df Sum of Sq  Pr(&gt;Chi)    
+1     85 43.841                           
+2     73 20.736 12    23.105 2.289e-12 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>This asks whether the predictors improve fit compared with a model containing only an intercept.</p>
+</section>
+<section id="likelihood-ratio-test-full-vs-reduced-model" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="likelihood-ratio-test-full-vs-reduced-model"><span class="header-section-number">4.5</span> Likelihood ratio test: full vs reduced model</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>m_dwv_reduced <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data =</span> df_filtered, log10_DWV_load <span class="sc">~</span> sampling_event)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m_dwv_reduced, m_dwv_full, <span class="at">test =</span> <span class="st">"LRT"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: log10_DWV_load ~ sampling_event
+Model 2: log10_DWV_load ~ sampling_event + host_plant
+  Res.Df    RSS Df Sum of Sq  Pr(&gt;Chi)    
+1     82 42.372                           
+2     73 20.736  9    21.636 9.277e-13 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>This asks whether the additional term improves the model beyond what is already included.</p>
+</section>
+<section id="term-deletion-with-drop1" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="term-deletion-with-drop1"><span class="header-section-number">4.6</span> Term deletion with <code>drop1()</code></h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">drop1</span>(m_dwv_full, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Single term deletions
+
+Model:
+log10_DWV_load ~ sampling_event + host_plant
+               Df Sum of Sq    RSS     AIC  Pr(&gt;Chi)    
+&lt;none&gt;                      20.736 -96.334              
+sampling_event  2    1.1806 21.916 -95.572   0.09244 .  
+host_plant      9   21.6363 42.372 -52.876 7.013e-10 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>This is a convenient way to evaluate each term within the same model.</p>
+</section>
+</section>
+<section id="distributions-and-log-transformation" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> 3. Distributions and log transformation</h1>
+<p>The response variable should usually determine the distribution.</p>
+<section id="first-look-at-the-response-distributions" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="first-look-at-the-response-distributions"><span class="header-section-number">5.1</span> First, look at the response distributions</h2>
+<section id="binary-response-bqcv-presence" class="level3" data-number="5.1.1">
+<h3 data-number="5.1.1" class="anchored" data-anchor-id="binary-response-bqcv-presence"><span class="header-section-number">5.1.1</span> Binary response: BQCV presence</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qplot</span>(</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">factor</span>(BQCV_pathogen_binary),</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> bee_dat,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">geom =</span> <span class="st">"bar"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="glmm_lecture_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A 0/1 response is naturally modeled with a <strong>binomial GLM or GLMM</strong>.</p>
+</section>
+<section id="continuous-raw-response-dwv-load" class="level3" data-number="5.1.2">
+<h3 data-number="5.1.2" class="anchored" data-anchor-id="continuous-raw-response-dwv-load"><span class="header-section-number">5.1.2</span> Continuous raw response: DWV load</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qplot</span>(</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> DWV_pathogen_load,</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df_filtered,</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">geom =</span> <span class="st">"histogram"</span>,</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">bins =</span> <span class="dv">30</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="glmm_lecture_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Raw pathogen loads are often strongly right-skewed.</p>
+</section>
+<section id="log-transformed-continuous-response-dwv-load" class="level3" data-number="5.1.3">
+<h3 data-number="5.1.3" class="anchored" data-anchor-id="log-transformed-continuous-response-dwv-load"><span class="header-section-number">5.1.3</span> Log-transformed continuous response: DWV load</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qplot</span>(</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> log10_DWV_load,</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df_filtered,</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">geom =</span> <span class="st">"histogram"</span>,</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">bins =</span> <span class="dv">30</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="glmm_lecture_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The log transform often makes the distribution more symmetric and easier to model with a Gaussian response.</p>
+</section>
+<section id="continuous-raw-response-nosema-load" class="level3" data-number="5.1.4">
+<h3 data-number="5.1.4" class="anchored" data-anchor-id="continuous-raw-response-nosema-load"><span class="header-section-number">5.1.4</span> Continuous raw response: Nosema load</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qplot</span>(</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> Nosema_pathogen_load,</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> bee_dat,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">geom =</span> <span class="st">"histogram"</span>,</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">bins =</span> <span class="dv">30</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="glmm_lecture_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="distribution-guide" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="distribution-guide"><span class="header-section-number">5.2</span> Distribution guide</h2>
+<ul>
+<li>Use <strong>Gaussian</strong> models for continuous responses that are roughly symmetric, often after transformation.</li>
+<li>Use <strong>binomial</strong> models for 0/1 responses such as pathogen presence.</li>
+<li>Use <strong>Gamma</strong> models for positive continuous responses when you want to model the raw scale directly.</li>
+<li>Use <strong>Poisson</strong> or <strong>negative binomial</strong> for count responses, which are not the main response type in this dataset.</li>
+</ul>
+</section>
+<section id="why-log-transform" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="why-log-transform"><span class="header-section-number">5.3</span> Why log-transform?</h2>
+<p>A log transform is useful when:</p>
+<ul>
+<li>the response is continuous and positive,</li>
+<li>the raw data are strongly right-skewed,</li>
+<li>variance increases with the mean,</li>
+<li>and interpretation on a multiplicative scale makes sense.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>m_dwv_log <span class="ot">&lt;-</span> <span class="fu">lm</span>(log10_DWV_load <span class="sc">~</span> sampling_event <span class="sc">+</span> bee_caste, <span class="at">data =</span> bee_dat)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_dwv_log)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log10_DWV_load ~ sampling_event + bee_caste, data = bee_dat)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-2.470 -1.977 -1.420  2.849  7.598 
+
+Coefficients:
+                Estimate Std. Error t value Pr(&gt;|t|)
+(Intercept)       1.3927     1.9798   0.703    0.482
+sampling_event2   0.4326     1.8130   0.239    0.812
+sampling_event3   1.2396     1.8942   0.654    0.513
+sampling_event4   0.1895     1.8846   0.101    0.920
+bee_castequeen    0.5846     1.9509   0.300    0.765
+bee_casteworker  -0.1619     0.6489  -0.249    0.803
+
+Residual standard error: 2.519 on 287 degrees of freedom
+  (5 observations deleted due to missingness)
+Multiple R-squared:  0.02819,   Adjusted R-squared:  0.01126 
+F-statistic: 1.665 on 5 and 287 DF,  p-value: 0.143</code></pre>
+</div>
+</div>
+<p>Do <strong>not</strong> log-transform binary responses. Also, logging is not mandatory if a different GLM family is more natural for the response.</p>
+</section>
+</section>
+<section id="random-effects-and-nesting" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> 4. Random effects and nesting</h1>
+<p>GLMMs extend GLMs by adding <strong>random effects</strong>, which account for grouped or non-independent observations.</p>
+<p>In field biology, non-independence often arises because samples are collected within the same <strong>site</strong>, <strong>field</strong>, or other grouping level.</p>
+<section id="why-random-effects" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="why-random-effects"><span class="header-section-number">6.1</span> Why random effects?</h2>
+<p>Use random effects when:</p>
+<ul>
+<li>observations are clustered,</li>
+<li>you expect groups to differ in baseline response,</li>
+<li>and the group levels are better treated as a sample from a broader population rather than as fixed categories of direct interest.</li>
+</ul>
+</section>
+<section id="random-intercept-example" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="random-intercept-example"><span class="header-section-number">6.2</span> Random intercept example</h2>
+<p>Here is a binomial GLMM for BQCV presence with a random intercept for site.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>g_bqcv_site <span class="ot">&lt;-</span> <span class="fu">lmer</span>(</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  log10_BQCV_load <span class="sc">~</span> bombus_spp <span class="sc">+</span> sampling_event <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> site_code),</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df_filtered)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(g_bqcv_site)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table (Type II Wald chisquare tests)
+
+Response: log10_BQCV_load
+                Chisq Df Pr(&gt;Chisq)  
+bombus_spp     6.3053  3    0.09767 .
+sampling_event 0.5113  3    0.91639  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+</section>
+<section id="nested-random-effects" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="nested-random-effects"><span class="header-section-number">6.3</span> Nested random effects</h2>
+<p>If fields are nested within sites, we can write that as <code>field_id</code> within <code>site_code</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>g_bqcv_site <span class="ot">&lt;-</span> <span class="fu">lmer</span>(</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  log10_BQCV_load <span class="sc">~</span> bombus_spp <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> site_code<span class="sc">/</span>sampling_event),</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df_filtered)</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(g_bqcv_site)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table (Type II Wald chisquare tests)
+
+Response: log10_BQCV_load
+           Chisq Df Pr(&gt;Chisq)  
+bombus_spp 8.032  3    0.04536 *
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>This expands to random intercepts for site ID and for sampling event nested within site.</p>
+</section>
+<section id="gamma-mixed-model-example" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="gamma-mixed-model-example"><span class="header-section-number">6.4</span> Gamma mixed model example</h2>
+<p>We can also use a mixed model for a different response error dist.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make pos only nosema</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>nosPos <span class="ot">&lt;-</span> bee_dat[bee_dat<span class="sc">$</span>Nosema_pathogen_load <span class="sc">&gt;</span> <span class="dv">0</span>,]</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="co"># gamma</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>nos_gamma <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  Nosema_pathogen_load <span class="sc">~</span> site_code <span class="sc">+</span> bombus_spp <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> sampling_event),</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> nosPos, <span class="at">family =</span> Gamma)</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(nos_gamma)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table (Type II Wald chisquare tests)
+
+Response: Nosema_pathogen_load
+            Chisq Df Pr(&gt;Chisq)  
+site_code  2.0756  4     0.7219  
+bombus_spp 5.6774  2     0.0585 .
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># log</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>nos_log <span class="ot">&lt;-</span> <span class="fu">lmer</span>(</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  log10_Nosema_load <span class="sc">~</span> site_code <span class="sc">+</span> bombus_spp <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> sampling_event),</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> nosPos)</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(nos_log)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table (Type II Wald chisquare tests)
+
+Response: log10_Nosema_load
+            Chisq Df Pr(&gt;Chisq)
+site_code  1.7864  4     0.7750
+bombus_spp 4.5417  2     0.1032</code></pre>
+</div>
+</div>
+<p>In practice, random effects are justified both statistically and biologically. If repeated samples come from shared sites or fields, independence is violated, and mixed models are often the better choice.</p>
+</section>
+</section>
+<section id="section" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> </h1>
+</section>
+<section id="interactions" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> 5. Interactions</h1>
+<p>Interactions ask whether the effect of one predictor depends on the level of another predictor.</p>
+<p>Because <strong>sampling_event</strong> is time-like, it is a useful interaction term in this dataset.</p>
+<section id="example-1-interaction-in-a-gaussian-model" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="example-1-interaction-in-a-gaussian-model"><span class="header-section-number">8.1</span> Example 1: interaction in a Gaussian model</h2>
+<p>Does the change in DWV load across sampling event differ by caste?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qplot</span>(</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> sampling_event_num,</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> log10_DWV_load,</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> bee_caste,</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> bee_dat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="glmm_lecture_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>m_dwv_interaction <span class="ot">&lt;-</span> <span class="fu">lmer</span>(log10_DWV_load <span class="sc">~</span> sampling_event <span class="sc">*</span> bee_caste <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> site_code), <span class="at">data =</span> bee_dat)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_dwv_interaction)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML ['lmerMod']
+Formula: log10_DWV_load ~ sampling_event * bee_caste + (1 | site_code)
+   Data: bee_dat
+
+REML criterion at convergence: 1360.3
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-0.9681 -0.7846 -0.5707  1.1295  3.0150 
+
+Random effects:
+ Groups    Name        Variance Std.Dev.
+ site_code (Intercept) 0.000    0.00    
+ Residual              6.352    2.52    
+Number of obs: 293, groups:  site_code, 5
+
+Fixed effects:
+                                Estimate Std. Error t value
+(Intercept)                      1.24091    1.98794   0.624
+sampling_event2                  0.43259    1.81366   0.239
+sampling_event3                  3.52961    3.20994   1.100
+sampling_event4                  0.20765    1.88544   0.110
+bee_castequeen                   0.73639    1.95920   0.376
+bee_casteworker                 -0.01012    0.67143  -0.015
+sampling_event3:bee_casteworker -2.32058    2.62553  -0.884
+
+Correlation of Fixed Effects:
+            (Intr) smpl_2 smpl_3 smpl_4 b_cstq b_cstw
+smplng_vnt2 -0.912                                   
+smplng_vnt3 -0.619  0.565                            
+smplng_vnt4 -0.948  0.962  0.587                     
+bee_casteqn -0.986  0.894  0.610  0.932              
+bee_cstwrkr -0.338  0.000  0.209  0.043  0.343       
+smplng_v3:_  0.086  0.000 -0.807 -0.011 -0.088 -0.256
+fit warnings:
+fixed-effect model matrix is rank deficient so dropping 5 columns / coefficients
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see help('isSingular')</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(m_dwv_interaction, <span class="at">type =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table (Type II Wald chisquare tests)
+
+Response: log10_DWV_load
+                          Chisq Df Pr(&gt;Chisq)  
+sampling_event           7.9363  3    0.04735 *
+bee_caste                0.2267  2    0.89284  
+sampling_event:bee_caste 0.7812  1    0.37678  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+</section>
+<section id="example-2-interaction-in-a-binomial-model" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="example-2-interaction-in-a-binomial-model"><span class="header-section-number">8.2</span> Example 2: interaction in a binomial model</h2>
+<p>Does the probability of BQCV infection across sampling event differ by caste?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>m_bqcv_interaction <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  BQCV_pathogen_binary <span class="sc">~</span> sampling_event <span class="sc">*</span> log10_DWV_load,</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> bee_dat,</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link=</span><span class="st">"logit"</span>)</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_bqcv_interaction)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = BQCV_pathogen_binary ~ sampling_event * log10_DWV_load, 
+    family = binomial(link = "logit"), data = bee_dat)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-2.8392   0.1893   0.4854   0.5643   0.6825  
+
+Coefficients:
+                                 Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)                     1.765e+00  4.844e-01   3.645 0.000268 ***
+sampling_event2                 1.708e+02  1.167e+04   0.015 0.988321    
+sampling_event3                 2.247e+00  1.323e+00   1.699 0.089317 .  
+sampling_event4                -8.683e-03  5.633e-01  -0.015 0.987700    
+log10_DWV_load                  2.311e-01  2.168e-01   1.066 0.286337    
+sampling_event2:log10_DWV_load -3.005e+01  2.066e+03  -0.015 0.988393    
+sampling_event3:log10_DWV_load -6.497e-01  3.260e-01  -1.993 0.046273 *  
+sampling_event4:log10_DWV_load -1.621e-01  2.459e-01  -0.659 0.509839    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 191.13  on 281  degrees of freedom
+Residual deviance: 172.19  on 274  degrees of freedom
+  (16 observations deleted due to missingness)
+AIC: 188.19
+
+Number of Fisher Scoring iterations: 20</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(m_bqcv_interaction, <span class="at">type =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table (Type II tests)
+
+Response: BQCV_pathogen_binary
+                              LR Chisq Df Pr(&gt;Chisq)   
+sampling_event                  4.1245  3   0.248328   
+log10_DWV_load                  0.1010  1   0.750623   
+sampling_event:log10_DWV_load  14.7942  3   0.002001 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>You can also compare the interaction model to the additive model:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>m_bqcv_additive <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  BQCV_pathogen_binary <span class="sc">~</span> sampling_event <span class="sc">+</span> log10_DWV_load,</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> bee_dat,</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link=</span><span class="st">"logit"</span>)</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_bqcv_additive) <span class="co"># higher aic</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = BQCV_pathogen_binary ~ sampling_event + log10_DWV_load, 
+    family = binomial(link = "logit"), data = bee_dat)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-2.5642   0.3883   0.4691   0.5324   0.5760  
+
+Coefficients:
+                Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)      2.15149    0.46345   4.642 3.44e-06 ***
+sampling_event2  1.25418    1.10610   1.134    0.257    
+sampling_event3  0.39586    0.63649   0.622    0.534    
+sampling_event4 -0.26918    0.50381  -0.534    0.593    
+log10_DWV_load  -0.02471    0.07732  -0.320    0.749    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 191.13  on 281  degrees of freedom
+Residual deviance: 186.98  on 277  degrees of freedom
+  (16 observations deleted due to missingness)
+AIC: 196.98
+
+Number of Fisher Scoring iterations: 6</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(m_bqcv_additive, <span class="at">type =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table (Type II tests)
+
+Response: BQCV_pathogen_binary
+               LR Chisq Df Pr(&gt;Chisq)
+sampling_event   4.1245  3     0.2483
+log10_DWV_load   0.1010  1     0.7506</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m_bqcv_additive, m_bqcv_interaction, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table
+
+Model 1: BQCV_pathogen_binary ~ sampling_event + log10_DWV_load
+Model 2: BQCV_pathogen_binary ~ sampling_event * log10_DWV_load
+  Resid. Df Resid. Dev Df Deviance Pr(&gt;Chi)   
+1       277     186.98                        
+2       274     172.19  3   14.794 0.002001 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="closing-summary" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Closing summary</h1>
+<ul>
+<li>Start by identifying whether the response is <strong>continuous</strong> or <strong>categorical</strong>.</li>
+<li>Use the <code>y ~ x</code> matrix to choose a basic model structure.</li>
+<li>Inspect the <strong>distribution of the response</strong> before choosing a family.</li>
+<li>Use <strong>log transformation</strong> for right-skewed continuous responses when appropriate.</li>
+<li>Use <strong>interactions</strong> when the effect of one predictor may depend on another.</li>
+<li>Use <strong>random effects</strong> when observations are grouped or nested.</li>
+<li>Test significance using several complementary tools: <code>summary()</code>, <code>car::Anova()</code>, likelihood ratio tests, and reduced-model comparisons.</li>
+</ul>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -74,6 +74,10 @@ April 2  | [Spatiotemporal Data in Spacetime](https://alexburn17.github.io/Theme
 April 7  | [Making Maps I](Lectures/plotly_mapping_lecture.html)  | -
 April 8  | **Portfolio Check #3** | [Homework #12](Homeworks/plotly_mapping_homework_v2.html)
 April 9  | [Making Maps II](Lectures/plotly_mapping_lecture.html) | -
+April 14 | [GLMMs](Lectures/glmm_lecture.html) | -
+April 15  | - | [Homework #13](Lectures/glmm_lecture.html)
+April 16 | [PCAs](Lectures/glmm_lecture.html) | -
+
 
 
 <!--

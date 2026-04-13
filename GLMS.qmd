@@ -1,0 +1,20 @@
+---
+title: "Data Analysis GLMS"
+format: html
+---
+
+```{R}
+
+# read in libraries
+library(dplyr)
+library(ggplot2)
+library(stringr)
+library(tidyr)
+library(car)
+library(lme4)
+
+
+# Read Data in
+bombus_df <- read.csv("data/Burnham_field_data_bombus_seasonal_variation_Dataset.csv", header=TRUE, stringsAsFactors=FALSE)
+
+```
