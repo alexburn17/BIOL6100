@@ -130,6 +130,19 @@ plot(eig, type = "b", pch = 19,
      xlab = "Principal component",
      ylab = "Eigenvalue",
      main = "Scree plot (iris PCA)")
+
+
+# test
+broken_stick <- function(p) sapply(1:p, function(k) sum(1/(k:p)) / p)
+bs <- broken_stick(ncol(iris_num))
+
+retain <- data.frame(
+  PC = paste0("PC", 1:length(pve)),
+  ObservedPVE = round(pve, 3),
+  BrokenStick = round(bs, 3),
+  Keep = pve > bs
+)
+retain
 ```
 
 ## Step 6: interpret scores and loadings
