@@ -1,0 +1,236 @@
+---
+title: "Statistical Machine Learning"
+subtitle: "PCA and Random Forest in R"
+author: P. Alexander Burnham
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    theme: cosmo
+execute:
+  echo: true
+  warning: false
+  message: false
+  freeze: auto
+---
+
+# Agenda
+- framing — why PCA vs random forest
+- Coding up a PCA
+- Coding up a random forest model
+
+# Framing
+
+## PCA vs. Random Forest
+
+- **PCA is unsupervised**: no response variable; goal is *structure + variance reduction*.
+- **Random forest is supervised**: response variable exists; goal is *prediction/classification + generalization*.
+
+## What you should pay attention to in each workflow
+
+- **PCA**: scaling, variance explained, scores vs loadings, “how many axises”, and whether structure is meaningful.
+- **Random forest**: train/test split (or CV), OOB (out-of-bag error), confusion matrix, variable importance.
+
+# Setup up our environment:
+
+```{r}
+# For reproducible results
+set.seed(1)
+
+# Packages used today
+library(ggplot2)
+library(psych)        # Bartlett's test
+library(randomForest) # Random forest
+
+# Data
+data(iris)
+```
+
+Quick peek:
+
+```{r}
+head(iris)
+str(iris)
+```
+
+
+
+# Part I — PCA (unsupervised)
+
+## Step 1: choose numeric columns and (usually) scale
+
+PCA uses **numeric** variables. Factors like `Species` are great for *coloring plots* later, but not for computing PCs.
+
+```{r}
+iris_num <- iris[, 1:4]
+iris_species <- iris$Species
+
+round(cor(iris_num), 2)
+```
+
+## Step 2: check whether PCA is “worth it” (Bartlett’s test)
+
+Bartlett’s test asks whether the correlation matrix differs from the identity matrix.
+
+```{r}
+bart <- cortest.bartlett(cor(iris_num), n = nrow(iris_num))
+bart
+```
+
+Expected output (trimmed):
+
+```
+$chisq
+[1] ...
+
+$p.value
+[1] ...
+...
+```
+
+## Step 3: fit PCA with `prcomp()`
+
+We scale because sepal/petal variables are on different ranges.
+
+```{r}
+pca <- prcomp(iris_num, center = TRUE, scale. = TRUE)
+summary(pca)
+```
+
+Expected output (trimmed):
+
+```
+Importance of components:
+                          PC1    PC2    PC3    PC4
+Standard deviation     ...    ...    ...    ...
+Proportion of Variance ...    ...    ...    ...
+Cumulative Proportion  ...    ...    ...    ...
+```
+
+## Step 4: variance explained (small table)
+
+```{r}
+eig <- pca$sdev^2
+pve <- eig / sum(eig)
+
+pca_var_table <- data.frame(
+  PC = paste0("PC", 1:length(eig)),
+  Eigenvalue = round(eig, 3),
+  PVE = round(pve, 3),
+  CumPVE = round(cumsum(pve), 3)
+)
+pca_var_table
+```
+
+## Step 5: scree plot
+
+```{r}
+plot(eig, type = "b", pch = 19,
+     xlab = "Principal component",
+     ylab = "Eigenvalue",
+     main = "Scree plot (iris PCA)")
+```
+
+## Step 6: interpret scores and loadings
+
+- **Scores**: where each observation lands in PC space.
+- **Loadings**: how strongly each original variable contributes to each PC.
+
+```{r}
+head(pca$x)
+pca$rotation
+```
+
+
+
+## Step 7: plot PC1 vs PC2 (color by species)
+
+```{r}
+scores <- as.data.frame(pca$x)
+scores$Species <- iris_species
+
+plt <- ggplot(scores, aes(PC1, PC2, color = Species)) +
+  geom_point(size = 2.6, alpha = 0.85) +
+  theme_minimal() +
+  labs(title = "PCA on iris", subtitle = "PCA is unsupervised; species used only for coloring")
+
+plt + stat_ellipse() # 95% CI
+
+
+```
+
+
+## Optional: test group separation *after* PCA
+
+PCA itself is unsupervised. But after PCA, you can test whether known groups differ in the reduced space.
+
+```{r}
+man <- manova(cbind(PC1, PC2) ~ Species, data = scores)
+summary(man, test = "Pillai")
+```
+
+# Part II — Random forest (supervised)
+
+## Step 1: define response and predictors
+
+Here the response is **Species** (categorical), and predictors are the four measurements.
+
+## Step 2: train/test split
+
+```{r}
+set.seed(42)
+id_train <- sample(seq_len(nrow(iris)), size = 0.7 * nrow(iris))
+train <- iris[id_train, ]
+test  <- iris[-id_train, ]
+```
+
+## Step 3: fit a random forest classifier
+
+```{r}
+set.seed(123)
+rf <- randomForest(
+  Species ~ ., data = train,
+  ntree = 500,
+  mtry = 2,
+  importance = TRUE
+)
+rf
+```
+
+
+
+## Step 4: evaluate on the test set
+
+```{r}
+pred <- predict(rf, newdata = test)
+conf <- table(Observed = test$Species, Predicted = pred)
+conf
+
+acc <- mean(pred == test$Species)
+acc
+```
+
+## Step 5: OOB error curve
+
+OOB error is an internal “almost cross-validation” estimate from bootstrap sampling.
+
+```{r}
+plot(rf, main = "Random forest OOB error vs number of trees")
+```
+
+## Step 6: variable importance
+
+```{r}
+importance(rf)
+varImpPlot(rf)
+```
+
+
+## Step 7 (quick): compare to a single decision tree intuition
+
+Talking point (no extra code needed):
+
+- A single tree can be unstable.
+- A forest averages many de-correlated trees → typically improves generalization.
+

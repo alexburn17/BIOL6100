@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="P. Alexander Burnham">
+
+<title>Statistical Machine Learning</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="stat_ml_livecode_files/libs/clipboard/clipboard.min.js"></script>
+<script src="stat_ml_livecode_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="stat_ml_livecode_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="stat_ml_livecode_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="stat_ml_livecode_files/libs/quarto-html/popper.min.js"></script>
+<script src="stat_ml_livecode_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="stat_ml_livecode_files/libs/quarto-html/anchor.min.js"></script>
+<link href="stat_ml_livecode_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="stat_ml_livecode_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="stat_ml_livecode_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="stat_ml_livecode_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="stat_ml_livecode_files/libs/bootstrap/bootstrap-a74871fe4945b66d259aafc266475145.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#agenda" id="toc-agenda" class="nav-link active" data-scroll-target="#agenda"><span class="header-section-number">1</span> Agenda</a></li>
+  <li><a href="#framing" id="toc-framing" class="nav-link" data-scroll-target="#framing"><span class="header-section-number">2</span> Framing</a>
+  <ul class="collapse">
+  <li><a href="#pca-vs.-random-forest" id="toc-pca-vs.-random-forest" class="nav-link" data-scroll-target="#pca-vs.-random-forest"><span class="header-section-number">2.1</span> PCA vs.&nbsp;Random Forest</a></li>
+  <li><a href="#what-you-should-pay-attention-to-in-each-workflow" id="toc-what-you-should-pay-attention-to-in-each-workflow" class="nav-link" data-scroll-target="#what-you-should-pay-attention-to-in-each-workflow"><span class="header-section-number">2.2</span> What you should pay attention to in each workflow</a></li>
+  </ul></li>
+  <li><a href="#setup-up-our-environment" id="toc-setup-up-our-environment" class="nav-link" data-scroll-target="#setup-up-our-environment"><span class="header-section-number">3</span> Setup up our environment:</a></li>
+  <li><a href="#part-i-pca-unsupervised" id="toc-part-i-pca-unsupervised" class="nav-link" data-scroll-target="#part-i-pca-unsupervised"><span class="header-section-number">4</span> Part I — PCA (unsupervised)</a>
+  <ul class="collapse">
+  <li><a href="#step-1-choose-numeric-columns-and-usually-scale" id="toc-step-1-choose-numeric-columns-and-usually-scale" class="nav-link" data-scroll-target="#step-1-choose-numeric-columns-and-usually-scale"><span class="header-section-number">4.1</span> Step 1: choose numeric columns and (usually) scale</a></li>
+  <li><a href="#step-2-check-whether-pca-is-worth-it-bartletts-test" id="toc-step-2-check-whether-pca-is-worth-it-bartletts-test" class="nav-link" data-scroll-target="#step-2-check-whether-pca-is-worth-it-bartletts-test"><span class="header-section-number">4.2</span> Step 2: check whether PCA is “worth it” (Bartlett’s test)</a></li>
+  <li><a href="#step-3-fit-pca-with-prcomp" id="toc-step-3-fit-pca-with-prcomp" class="nav-link" data-scroll-target="#step-3-fit-pca-with-prcomp"><span class="header-section-number">4.3</span> Step 3: fit PCA with <code>prcomp()</code></a></li>
+  <li><a href="#step-4-variance-explained-small-table" id="toc-step-4-variance-explained-small-table" class="nav-link" data-scroll-target="#step-4-variance-explained-small-table"><span class="header-section-number">4.4</span> Step 4: variance explained (small table)</a></li>
+  <li><a href="#step-5-scree-plot" id="toc-step-5-scree-plot" class="nav-link" data-scroll-target="#step-5-scree-plot"><span class="header-section-number">4.5</span> Step 5: scree plot</a></li>
+  <li><a href="#step-6-interpret-scores-and-loadings" id="toc-step-6-interpret-scores-and-loadings" class="nav-link" data-scroll-target="#step-6-interpret-scores-and-loadings"><span class="header-section-number">4.6</span> Step 6: interpret scores and loadings</a></li>
+  <li><a href="#step-7-plot-pc1-vs-pc2-color-by-species" id="toc-step-7-plot-pc1-vs-pc2-color-by-species" class="nav-link" data-scroll-target="#step-7-plot-pc1-vs-pc2-color-by-species"><span class="header-section-number">4.7</span> Step 7: plot PC1 vs PC2 (color by species)</a></li>
+  <li><a href="#optional-test-group-separation-after-pca" id="toc-optional-test-group-separation-after-pca" class="nav-link" data-scroll-target="#optional-test-group-separation-after-pca"><span class="header-section-number">4.8</span> Optional: test group separation <em>after</em> PCA</a></li>
+  </ul></li>
+  <li><a href="#part-ii-random-forest-supervised" id="toc-part-ii-random-forest-supervised" class="nav-link" data-scroll-target="#part-ii-random-forest-supervised"><span class="header-section-number">5</span> Part II — Random forest (supervised)</a>
+  <ul class="collapse">
+  <li><a href="#step-1-define-response-and-predictors" id="toc-step-1-define-response-and-predictors" class="nav-link" data-scroll-target="#step-1-define-response-and-predictors"><span class="header-section-number">5.1</span> Step 1: define response and predictors</a></li>
+  <li><a href="#step-2-traintest-split" id="toc-step-2-traintest-split" class="nav-link" data-scroll-target="#step-2-traintest-split"><span class="header-section-number">5.2</span> Step 2: train/test split</a></li>
+  <li><a href="#step-3-fit-a-random-forest-classifier" id="toc-step-3-fit-a-random-forest-classifier" class="nav-link" data-scroll-target="#step-3-fit-a-random-forest-classifier"><span class="header-section-number">5.3</span> Step 3: fit a random forest classifier</a></li>
+  <li><a href="#step-4-evaluate-on-the-test-set" id="toc-step-4-evaluate-on-the-test-set" class="nav-link" data-scroll-target="#step-4-evaluate-on-the-test-set"><span class="header-section-number">5.4</span> Step 4: evaluate on the test set</a></li>
+  <li><a href="#step-5-oob-error-curve" id="toc-step-5-oob-error-curve" class="nav-link" data-scroll-target="#step-5-oob-error-curve"><span class="header-section-number">5.5</span> Step 5: OOB error curve</a></li>
+  <li><a href="#step-6-variable-importance" id="toc-step-6-variable-importance" class="nav-link" data-scroll-target="#step-6-variable-importance"><span class="header-section-number">5.6</span> Step 6: variable importance</a></li>
+  <li><a href="#step-7-quick-compare-to-a-single-decision-tree-intuition" id="toc-step-7-quick-compare-to-a-single-decision-tree-intuition" class="nav-link" data-scroll-target="#step-7-quick-compare-to-a-single-decision-tree-intuition"><span class="header-section-number">5.7</span> Step 7 (quick): compare to a single decision tree intuition</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Statistical Machine Learning</h1>
+<p class="subtitle lead">PCA and Random Forest in R</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>P. Alexander Burnham </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="agenda" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Agenda</h1>
+<ul>
+<li>framing — why PCA vs random forest</li>
+<li>Coding up a PCA</li>
+<li>Coding up a random forest model</li>
+</ul>
+</section>
+<section id="framing" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Framing</h1>
+<section id="pca-vs.-random-forest" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="pca-vs.-random-forest"><span class="header-section-number">2.1</span> PCA vs.&nbsp;Random Forest</h2>
+<ul>
+<li><strong>PCA is unsupervised</strong>: no response variable; goal is <em>structure + variance reduction</em>.</li>
+<li><strong>Random forest is supervised</strong>: response variable exists; goal is <em>prediction/classification + generalization</em>.</li>
+</ul>
+</section>
+<section id="what-you-should-pay-attention-to-in-each-workflow" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="what-you-should-pay-attention-to-in-each-workflow"><span class="header-section-number">2.2</span> What you should pay attention to in each workflow</h2>
+<ul>
+<li><strong>PCA</strong>: scaling, variance explained, scores vs loadings, “how many axises”, and whether structure is meaningful.</li>
+<li><strong>Random forest</strong>: train/test split (or CV), OOB (out-of-bag error), confusion matrix, variable importance.</li>
+</ul>
+</section>
+</section>
+<section id="setup-up-our-environment" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Setup up our environment:</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># For reproducible results</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Packages used today</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)        <span class="co"># Bartlett's test</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(randomForest) <span class="co"># Random forest</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Data</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(iris)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Quick peek:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(iris)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+1          5.1         3.5          1.4         0.2  setosa
+2          4.9         3.0          1.4         0.2  setosa
+3          4.7         3.2          1.3         0.2  setosa
+4          4.6         3.1          1.5         0.2  setosa
+5          5.0         3.6          1.4         0.2  setosa
+6          5.4         3.9          1.7         0.4  setosa</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(iris)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   150 obs. of  5 variables:
+ $ Sepal.Length: num  5.1 4.9 4.7 4.6 5 5.4 4.6 5 4.4 4.9 ...
+ $ Sepal.Width : num  3.5 3 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 ...
+ $ Petal.Length: num  1.4 1.4 1.3 1.5 1.4 1.7 1.4 1.5 1.4 1.5 ...
+ $ Petal.Width : num  0.2 0.2 0.2 0.2 0.2 0.4 0.3 0.2 0.2 0.1 ...
+ $ Species     : Factor w/ 3 levels "setosa","versicolor",..: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+</div>
+</div>
+</section>
+<section id="part-i-pca-unsupervised" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Part I — PCA (unsupervised)</h1>
+<section id="step-1-choose-numeric-columns-and-usually-scale" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="step-1-choose-numeric-columns-and-usually-scale"><span class="header-section-number">4.1</span> Step 1: choose numeric columns and (usually) scale</h2>
+<p>PCA uses <strong>numeric</strong> variables. Factors like <code>Species</code> are great for <em>coloring plots</em> later, but not for computing PCs.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>iris_num <span class="ot">&lt;-</span> iris[, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>iris_species <span class="ot">&lt;-</span> iris<span class="sc">$</span>Species</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cor</span>(iris_num), <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             Sepal.Length Sepal.Width Petal.Length Petal.Width
+Sepal.Length         1.00       -0.12         0.87        0.82
+Sepal.Width         -0.12        1.00        -0.43       -0.37
+Petal.Length         0.87       -0.43         1.00        0.96
+Petal.Width          0.82       -0.37         0.96        1.00</code></pre>
+</div>
+</div>
+</section>
+<section id="step-2-check-whether-pca-is-worth-it-bartletts-test" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="step-2-check-whether-pca-is-worth-it-bartletts-test"><span class="header-section-number">4.2</span> Step 2: check whether PCA is “worth it” (Bartlett’s test)</h2>
+<p>Bartlett’s test asks whether the correlation matrix differs from the identity matrix.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>bart <span class="ot">&lt;-</span> <span class="fu">cortest.bartlett</span>(<span class="fu">cor</span>(iris_num), <span class="at">n =</span> <span class="fu">nrow</span>(iris_num))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>bart</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$chisq
+[1] 706.9592
+
+$p.value
+[1] 1.92268e-149
+
+$df
+[1] 6</code></pre>
+</div>
+</div>
+<p>Expected output (trimmed):</p>
+<pre><code>$chisq
+[1] ...
+
+$p.value
+[1] ...
+...</code></pre>
+</section>
+<section id="step-3-fit-pca-with-prcomp" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="step-3-fit-pca-with-prcomp"><span class="header-section-number">4.3</span> Step 3: fit PCA with <code>prcomp()</code></h2>
+<p>We scale because sepal/petal variables are on different ranges.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pca <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(iris_num, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale. =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pca)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Importance of components:
+                          PC1    PC2     PC3     PC4
+Standard deviation     1.7084 0.9560 0.38309 0.14393
+Proportion of Variance 0.7296 0.2285 0.03669 0.00518
+Cumulative Proportion  0.7296 0.9581 0.99482 1.00000</code></pre>
+</div>
+</div>
+<p>Expected output (trimmed):</p>
+<pre><code>Importance of components:
+                          PC1    PC2    PC3    PC4
+Standard deviation     ...    ...    ...    ...
+Proportion of Variance ...    ...    ...    ...
+Cumulative Proportion  ...    ...    ...    ...</code></pre>
+</section>
+<section id="step-4-variance-explained-small-table" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="step-4-variance-explained-small-table"><span class="header-section-number">4.4</span> Step 4: variance explained (small table)</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>eig <span class="ot">&lt;-</span> pca<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>pve <span class="ot">&lt;-</span> eig <span class="sc">/</span> <span class="fu">sum</span>(eig)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>pca_var_table <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">PC =</span> <span class="fu">paste0</span>(<span class="st">"PC"</span>, <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(eig)),</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Eigenvalue =</span> <span class="fu">round</span>(eig, <span class="dv">3</span>),</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">PVE =</span> <span class="fu">round</span>(pve, <span class="dv">3</span>),</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">CumPVE =</span> <span class="fu">round</span>(<span class="fu">cumsum</span>(pve), <span class="dv">3</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>pca_var_table</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   PC Eigenvalue   PVE CumPVE
+1 PC1      2.918 0.730  0.730
+2 PC2      0.914 0.229  0.958
+3 PC3      0.147 0.037  0.995
+4 PC4      0.021 0.005  1.000</code></pre>
+</div>
+</div>
+</section>
+<section id="step-5-scree-plot" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="step-5-scree-plot"><span class="header-section-number">4.5</span> Step 5: scree plot</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(eig, <span class="at">type =</span> <span class="st">"b"</span>, <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Principal component"</span>,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Eigenvalue"</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Scree plot (iris PCA)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stat_ml_livecode_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="step-6-interpret-scores-and-loadings" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="step-6-interpret-scores-and-loadings"><span class="header-section-number">4.6</span> Step 6: interpret scores and loadings</h2>
+<ul>
+<li><strong>Scores</strong>: where each observation lands in PC space.</li>
+<li><strong>Loadings</strong>: how strongly each original variable contributes to each PC.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pca<span class="sc">$</span>x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           PC1        PC2         PC3          PC4
+[1,] -2.257141 -0.4784238  0.12727962  0.024087508
+[2,] -2.074013  0.6718827  0.23382552  0.102662845
+[3,] -2.356335  0.3407664 -0.04405390  0.028282305
+[4,] -2.291707  0.5953999 -0.09098530 -0.065735340
+[5,] -2.381863 -0.6446757 -0.01568565 -0.035802870
+[6,] -2.068701 -1.4842053 -0.02687825  0.006586116</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>pca<span class="sc">$</span>rotation</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                    PC1         PC2        PC3        PC4
+Sepal.Length  0.5210659 -0.37741762  0.7195664  0.2612863
+Sepal.Width  -0.2693474 -0.92329566 -0.2443818 -0.1235096
+Petal.Length  0.5804131 -0.02449161 -0.1421264 -0.8014492
+Petal.Width   0.5648565 -0.06694199 -0.6342727  0.5235971</code></pre>
+</div>
+</div>
+</section>
+<section id="step-7-plot-pc1-vs-pc2-color-by-species" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="step-7-plot-pc1-vs-pc2-color-by-species"><span class="header-section-number">4.7</span> Step 7: plot PC1 vs PC2 (color by species)</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>scores <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(pca<span class="sc">$</span>x)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>scores<span class="sc">$</span>Species <span class="ot">&lt;-</span> iris_species</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>plt <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(scores, <span class="fu">aes</span>(PC1, PC2, <span class="at">color =</span> Species)) <span class="sc">+</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.6</span>, <span class="at">alpha =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"PCA on iris"</span>, <span class="at">subtitle =</span> <span class="st">"PCA is unsupervised; species used only for coloring"</span>)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>plt <span class="sc">+</span> <span class="fu">stat_ellipse</span>() <span class="co"># 95% CI</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stat_ml_livecode_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="optional-test-group-separation-after-pca" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="optional-test-group-separation-after-pca"><span class="header-section-number">4.8</span> Optional: test group separation <em>after</em> PCA</h2>
+<p>PCA itself is unsupervised. But after PCA, you can test whether known groups differ in the reduced space.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>man <span class="ot">&lt;-</span> <span class="fu">manova</span>(<span class="fu">cbind</span>(PC1, PC2) <span class="sc">~</span> Species, <span class="at">data =</span> scores)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(man, <span class="at">test =</span> <span class="st">"Pillai"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           Df Pillai approx F num Df den Df    Pr(&gt;F)    
+Species     2 1.1003   89.894      4    294 &lt; 2.2e-16 ***
+Residuals 147                                            
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="part-ii-random-forest-supervised" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Part II — Random forest (supervised)</h1>
+<section id="step-1-define-response-and-predictors" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="step-1-define-response-and-predictors"><span class="header-section-number">5.1</span> Step 1: define response and predictors</h2>
+<p>Here the response is <strong>Species</strong> (categorical), and predictors are the four measurements.</p>
+</section>
+<section id="step-2-traintest-split" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="step-2-traintest-split"><span class="header-section-number">5.2</span> Step 2: train/test split</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>id_train <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(iris)), <span class="at">size =</span> <span class="fl">0.7</span> <span class="sc">*</span> <span class="fu">nrow</span>(iris))</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> iris[id_train, ]</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>test  <span class="ot">&lt;-</span> iris[<span class="sc">-</span>id_train, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="step-3-fit-a-random-forest-classifier" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="step-3-fit-a-random-forest-classifier"><span class="header-section-number">5.3</span> Step 3: fit a random forest classifier</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  Species <span class="sc">~</span> ., <span class="at">data =</span> train,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ntree =</span> <span class="dv">500</span>,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">mtry =</span> <span class="dv">2</span>,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">importance =</span> <span class="cn">TRUE</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>rf</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+ randomForest(formula = Species ~ ., data = train, ntree = 500,      mtry = 2, importance = TRUE) 
+               Type of random forest: classification
+                     Number of trees: 500
+No. of variables tried at each split: 2
+
+        OOB estimate of  error rate: 5.71%
+Confusion matrix:
+           setosa versicolor virginica class.error
+setosa         38          0         0  0.00000000
+versicolor      0         33         2  0.05714286
+virginica       0          4        28  0.12500000</code></pre>
+</div>
+</div>
+</section>
+<section id="step-4-evaluate-on-the-test-set" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="step-4-evaluate-on-the-test-set"><span class="header-section-number">5.4</span> Step 4: evaluate on the test set</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf, <span class="at">newdata =</span> test)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>conf <span class="ot">&lt;-</span> <span class="fu">table</span>(<span class="at">Observed =</span> test<span class="sc">$</span>Species, <span class="at">Predicted =</span> pred)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>conf</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            Predicted
+Observed     setosa versicolor virginica
+  setosa         12          0         0
+  versicolor      0         14         1
+  virginica       0          1        17</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>acc <span class="ot">&lt;-</span> <span class="fu">mean</span>(pred <span class="sc">==</span> test<span class="sc">$</span>Species)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>acc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9555556</code></pre>
+</div>
+</div>
+</section>
+<section id="step-5-oob-error-curve" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="step-5-oob-error-curve"><span class="header-section-number">5.5</span> Step 5: OOB error curve</h2>
+<p>OOB error is an internal “almost cross-validation” estimate from bootstrap sampling.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(rf, <span class="at">main =</span> <span class="st">"Random forest OOB error vs number of trees"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stat_ml_livecode_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="step-6-variable-importance" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="step-6-variable-importance"><span class="header-section-number">5.6</span> Step 6: variable importance</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">importance</span>(rf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                setosa versicolor  virginica MeanDecreaseAccuracy
+Sepal.Length  6.040250  5.5892553  6.9462657             9.459304
+Sepal.Width   4.688287 -0.5852934  0.2943366             1.703259
+Petal.Length 22.699029 28.7675782 30.8233530            33.157860
+Petal.Width  20.995156 28.3970314 32.0824521            32.133867
+             MeanDecreaseGini
+Sepal.Length         6.205799
+Sepal.Width          1.905945
+Petal.Length        30.566666
+Petal.Width         30.432237</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">varImpPlot</span>(rf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stat_ml_livecode_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="step-7-quick-compare-to-a-single-decision-tree-intuition" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="step-7-quick-compare-to-a-single-decision-tree-intuition"><span class="header-section-number">5.7</span> Step 7 (quick): compare to a single decision tree intuition</h2>
+<p>Talking point (no extra code needed):</p>
+<ul>
+<li>A single tree can be unstable.</li>
+<li>A forest averages many de-correlated trees → typically improves generalization.</li>
+</ul>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
