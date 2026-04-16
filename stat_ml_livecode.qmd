@@ -240,10 +240,3 @@ varImpPlot(rf)
 ```
 
 
-## Step 7 (quick): compare to a single decision tree intuition
-
-Talking point (no extra code needed):
-
-- A single tree can be unstable.
-- A forest averages many de-correlated trees → typically improves generalization.
-
