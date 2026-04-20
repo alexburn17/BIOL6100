@@ -7,10 +7,10 @@
 
 ---
 
-##Assignment:
+## Assignment:
 #### Using a dataset of your choice, create a random forest model and a PCA to answer some questions about the data.
 
-##Datasets:
+## Datasets:
 #### You can do this assignment with a data set of your choice: 
 
 * Any of the datasets linked at the top of the class website
