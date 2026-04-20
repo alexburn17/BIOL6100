@@ -78,7 +78,7 @@ April 14 | [GLMMs](Lectures/glmm_lecture.html) | -
 April 15  | - | [Homework #13](Homeworks/BIOL6100_GLMS_HW13.html)
 April 16 | [Statistical Machine Learning](Lectures/stat_ml_livecode.html) | -
 April 21  | [Probability Distributions](Lectures/ProbabilityDistributions.html) | -
-April 22  | - | [Homework #14](Homeworks)
+April 22  | - | [Homework #14](Homeworks/BIOL6100_MV_HW14.html)
 April 23  | [Strategic Coding Practices I](Lectures/StrategicCodingPractices.html) | -
 April 28  | [Strategic Coding Practices II](Lectures/StrategicCodingPractices.html) | -
 April 29  | - | [Homework #15](Homeworks)
